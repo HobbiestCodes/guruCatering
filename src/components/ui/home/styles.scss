@@ -1,0 +1,97 @@
+@import "./../../sass/global";
+
+.child {
+  @include fullRatio($h: 90%);
+  position: relative;
+  .scrollme {
+    position: absolute;
+    inset: 0;
+    top: 90%;
+    left: 46%;
+    font-size: 1.2rem;
+    color: $atc;
+    font-weight: 400;
+    @include flex(flex-start, center);
+    gap: 0.5rem;
+    animation: twoandfro 0.8s infinite alternate-reverse;
+  }
+  @keyframes twoandfro {
+    0% {
+      top: 88%;
+    }
+    100% {
+      top: 90%;
+    }
+  }
+  .headers {
+    @include flex(flex-start, $fd: column);
+    h1,
+    p,
+    h2 {
+      text-align: center;
+    }
+
+    p {
+      font-size: 18px;
+      color: $primary;
+      span {
+        color: $atc;
+      }
+    }
+    h1 {
+      font-size: 5rem;
+      line-height: 100%;
+      font-weight: 800;
+      font-family: "Open Sans", sans-serif;
+
+      span {
+        color: $primary;
+      }
+    }
+    h2 {
+      font-size: 4rem;
+      letter-spacing: 1.5px;
+      font-weight: 300;
+      span {
+        color: $primary;
+      }
+    }
+    .buttons {
+        @include flex();
+        gap: 1.4rem;
+      button {
+        border-radius: 30px;
+        background-color: $atc;
+        color: white;
+        padding: 6px 16px;
+        border: none;
+        margin-top: 12px;
+        font-size: 18px;
+        font-weight: 300;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        border: 1px solid $atc;
+        transition: 0.1s all cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        &:hover {
+            background-color: transparent;
+            color: $atc;  
+            transform: scale(1.1);
+            // margin-top: -10px;
+        }
+        &.outline {
+          background-color: transparent;
+          color: $atc;
+          font-weight: 400;
+        &:hover {
+            background-color: $atc;
+            color: white;
+        }
+        }
+        &:active {
+            transition: 0.2s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: scale(0.8);
+        }
+      }
+    }
+  }
+}

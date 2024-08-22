@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@mixin flex($jc: center, $al: center, $fd: row, $wp: wrap) {
+    display: flex;
+    justify-content: $jc;
+    align-items: $al;
+    flex-direction: $fd;
+    flex-wrap: $wp;
+}
+
+@mixin fullScreen($w: 100vw, $h: 100vh) {
+    width: $w;
+    height: $h;
+}
+
+@mixin fullRatio($w: 100%, $h: 100%) {
+    width: $w;
+    height: $h;
+}
+
+
+
+// colors...
+$black: #171717;
+$white: #eeeeee;
+$grey: #b5b5b5;
+
+// primary colors - Tradic
+$primary: rgb(248, 188, 36);
+$secondary: teal;
+$atc: #00175c;
+// universal colors
+$danger: #ff5555;
+$warn: #ffe54f;
+$success: #54d661;
+
+
+// font...
+#League_Spartan {
+    font-family: var(--font-main);
+}
+#poppins {
+    font-family: var(--font-pop);
+}
+
+// numbers (px)...
+$sm: 16px;
+$md: 20px;
+$lg: 24px;
+$xl: 32px;
+$xxl: 48px;
+$full: 100px;
+
+// ratios...
+$fullRatio: 100%;
+$midRatio: 80%;
+$halfRatio: 50%;
+$quaterRatio: 30%;
+
+
+
+$breakpoints: (
+  mobile : 0px, 
+  tablet : 589px,
+  desktop: 899px,
+);
+
+$maxPoints: (
+	mobile: 590px,
+	tablet: 1023px,
+  desktop: 2080px
+
+);
+
+@mixin media($keys...) {
+	@each $key in $keys {
+		@media screen and (min-width: map-get($breakpoints, $key)) and (max-width: map-get($maxPoints, $key)) {
+			@content;
+		}
+	}
+}
