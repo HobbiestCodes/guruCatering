@@ -63,9 +63,12 @@
                     }
                 }
                 &.login {
+                    width: 6rem;
                     &:hover {
+                        // transform: scale(0.8);
                         &::before {
                         width: 0;
+
                     }
                     }
                 }

@@ -1,16 +1,22 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
-import jwt from 'jsonwebtoken';
-import cors from 'cors';
-import {OAuth2Client} from 'google-auth-library';
-import {userModel} from "./mongo/schema.js";
+import session from 'express-session';
+import passport from 'passport';
+import './pass.js';
+import MongoStore from 'connect-mongo';
 
+// import bodyParser from 'body-parser';
+// import jwt from 'jsonwebtoken';
+import cors from 'cors';
+// import {OAuth2Client} from 'google-auth-library';
+// import {userModel} from "./mongo/schema.js";
+ 
 import { readFood } from './mongo/read.js';
 import { CreateFood } from './mongo/create.js';
 import { deleteFood } from './mongo/delete.js';
 import { updateFood } from './mongo/update.js';
+
 
 dotenv.config();
 
@@ -18,14 +24,6 @@ const app = express();
 
 const port = process.env.PORT || 7000;
 const URI = process.env.MONGO_URI
-const G_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-const G_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-
-const client = new OAuth2Client(G_CLIENT_ID);
-
-app.use(cors());
-app.use(bodyParser.json());
-
 
 const connection = () => {
   mongoose.connect(URI).then(() => {
@@ -49,28 +47,59 @@ app.use((req, res, next) => {
   next();
 })
 
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // Store sessions in MongoDB
+    cookie: {
+      name: 'connection.sid',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      secure: false, // Set to true if using HTTPS
+    },
+  })
+);
 
-app.post('/auth/google', async (req, res) => {
-  const { token } = req.body;
-  const ticket = await client.verifyIdToken({
-    idToken: token,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  });
-  const { email } = ticket.getPayload();
+app.use(passport.initialize());
+app.use(passport.session());
 
-  // Check if user exists in DB
-  let user = await userModel.findOne({ email });
-  if (!user) {
-    let user = new userModel({ email });
-    await user.save();
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
+app.get('/', (req, res) => {
+  res.redirect('http://localhost:5173');
+})
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/'); // Redirect to the dashboard or another page
   }
-
-  // Create JWjson.createObject token
-  const jwtToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+);
+// Logout Route
+app.get('/api/logout', (req, res) => {
+  req.logout();
+  req.session.destroy() // Logout from Passport.js
+  res.clearCookie('connection.sid'); // Clear the session cookie
+  req.logout((err) => { // Passport's logout method
+    if (err) {
+      return res.status(500).send('Error logging out');
+    }
+    req.session.destroy((err) => { // Destroy the session
+      if (err) {
+        return res.status(500).send('Error destroying session');
+      }
+  res.clearCookie('connection.sid'); // Clear the session cookie
+      res.send('ok'); // Send the final response
+    });
   });
+});
 
-  res.status(200).json({ token: jwtToken, role: user.role });
+app.get('/api/current_user', (req, res) => {
+  res.send(req.user);
 });
 
 

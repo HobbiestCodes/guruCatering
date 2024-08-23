@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./styles.scss";
 // import logo from "/assets/logo.png";
 import { motion } from "framer-motion";
-import GoogleLoginButton from "../../funcs/login";
+import Login from "../../funcs/Logged";
 
 function Navbar() {
     const container = {
@@ -77,7 +77,7 @@ function Navbar() {
             variants={item}
             className="login"
             >
-          <GoogleLoginButton />
+          <Login />
             </motion.li>
         </motion.ul>
     
