@@ -115,28 +115,28 @@ export function Model(props) {
         rotation={[-0.388, -0.734, -0.267]}
       />
       <pointLight
-        intensity={8}
+        intensity={4}
         decay={2}
         color="#ffcf00"
         position={[4.654, 3.717, -3.401]}
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <pointLight
-        intensity={8}
+        intensity={4}
         decay={2}
         color="#ffcf00"
         position={[4.997, 3.717, -3.401]}
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <pointLight
-        intensity={8}
+        intensity={4}
         decay={2}
         color="#ffcf00"
         position={[-5.577, 3.717, -3.401]}
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <pointLight
-        intensity={8}
+        intensity={4}
         decay={2}
         color="#ffcf00"
         position={[-5.234, 3.717, -3.401]}

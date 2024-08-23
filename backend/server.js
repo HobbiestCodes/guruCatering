@@ -1,17 +1,31 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
+import cors from 'cors';
+import {OAuth2Client} from 'google-auth-library';
+import {userModel} from "./mongo/schema.js";
 
 import { readFood } from './mongo/read.js';
 import { CreateFood } from './mongo/create.js';
 import { deleteFood } from './mongo/delete.js';
 import { updateFood } from './mongo/update.js';
 
-const app = express();
-const port = 8080;
 dotenv.config();
-const URI = 'mongodb+srv://adarshpanditdev:hNkoJthz1QxRGOcy@cluster0.ox8j0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+
+const app = express();
+
+const port = process.env.PORT || 7000;
+const URI = process.env.MONGO_URI
+const G_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+const G_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
+
+const client = new OAuth2Client(G_CLIENT_ID);
+
+app.use(cors());
+app.use(bodyParser.json());
+
 
 const connection = () => {
   mongoose.connect(URI).then(() => {
@@ -34,6 +48,30 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
   next();
 })
+
+
+app.post('/auth/google', async (req, res) => {
+  const { token } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  const { email } = ticket.getPayload();
+
+  // Check if user exists in DB
+  let user = await userModel.findOne({ email });
+  if (!user) {
+    let user = new userModel({ email });
+    await user.save();
+  }
+
+  // Create JWjson.createObject token
+  const jwtToken = jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET, {
+    expiresIn: '1h',
+  });
+
+  res.status(200).json({ token: jwtToken, role: user.role });
+});
 
 
 app.get('/food', async (req, res) => {

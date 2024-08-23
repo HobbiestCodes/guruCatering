@@ -32,10 +32,11 @@
     }
 
     p {
+      margin-top: 1.5%;
       font-size: 18px;
-      color: $primary;
+      color: white;
       span {
-        color: $atc;
+        color: $warn;
       }
     }
     h1 {

@@ -8,7 +8,7 @@
     position: relative;
     z-index: 9;
     padding: 0px 5% 0px 4%;
-    background-color: rgba($color: white, $alpha: 0.2);
+    background-color: rgba($color: white, $alpha: 0.4);
     backdrop-filter: blur(4px);
     .nav_logo {
         width: 10%;
@@ -63,28 +63,10 @@
                     }
                 }
                 &.login {
-                    padding: 0.3rem 1rem;
-                    border-radius: 50px;
-                    background-color: transparent;
-                    color: $atc;
-                    border: 1px solid $atc;
-                    transition: 0.3s all;
-                    &:hover {
-                        background-color: $atc;
-                        color: white;
-                    }
                     &:hover {
                         &::before {
                         width: 0;
                     }
-                    }
-                }
-                &.risgeter {
-                    color: white;
-                    background-color: $atc;
-                    &:hover {
-                        background-color: transparent;
-                        color: $atc;
                     }
                 }
             }
