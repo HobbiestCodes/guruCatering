@@ -4,7 +4,7 @@ import "./../sass/images.scss";
 import axios from "axios";
 
 const Login = () => {
-  const user = useAuth();
+  const {user, loading} = useAuth();
   console.log(user);
   
   const handleGoogleLogin = () => {
@@ -14,7 +14,7 @@ const Login = () => {
   const handleLogout = async () => {
      const red = await axios.get("http://localhost:8080/api/logout", {withCredentials: true});
     console.log(red);
-    if (red.data === 'ok') {
+    if (red.data === 'Logged out') {
     window.open("http://localhost:5173", "_self");
     }
     

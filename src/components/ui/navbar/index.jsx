@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.scss";
-// import logo from "/assets/logo.png";
+import logo from "/logo.png";
 import { motion } from "framer-motion";
 import Login from "../../funcs/Logged";
 
@@ -20,7 +20,7 @@ function Navbar() {
       }
       
       const item = {
-        hidden: { opacity: 0, y: -50 },
+        hidden: { opacity: 0, y: -20 },
         show: { opacity: 1, y: 0 }
       }
 
@@ -45,13 +45,13 @@ function Navbar() {
       }}
       viewport={{ once: true }}
       className="nav_logo">
-        {/* <img src={logo} alt="logo" /> */}
+        <img src={logo} alt="logo" />
       </motion.div>
+
         <motion.ul
         initial='hidden'
-        whileInView='show'
+        animate='show'
         variants={container}
-        viewport={{ once: true }}
         >
           {tabs.map((tab, index) => (
             <motion.li
@@ -68,7 +68,7 @@ function Navbar() {
 
       <motion.ul
         initial='hidden'
-        whileInView='show'
+        animate='show'
         variants={container}
         viewport={{ once: true }}
         className="loginContainer"

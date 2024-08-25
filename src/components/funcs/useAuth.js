@@ -9,8 +9,7 @@ const useAuth = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get('http://localhost:5173/api/current_user', { withCredentials: true });
-        console.log('User:', res.data);
-        setUser(res.data || null);
+        setUser(res.data.user);
       } catch (err) {
         console.error('Error fetching user:', err);
       } finally {

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import passport from 'passport'; 
-import './pass.js';
+import './passport.js';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
 
@@ -34,6 +34,10 @@ app.listen(port, () => {
 }
 
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
 app.use(express.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -44,14 +48,16 @@ app.use((req, res, next) => {
 
 app.use(
   session({
-    secret: process.env.JWT_SECRET,
+    secret: process.env.SESSION_BYTE,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }), // Store sessions in MongoDB
     cookie: {
       name: 'connection.sid',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      maxAge: 24 * 60 * 60 * 1000, // 1 hour
       secure: false, // Set to true if using HTTPS
+      httpOnly: true,
+      sameSite: 'Lax',
     },
   })
 );
@@ -59,10 +65,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}))
 app.get('/', (req, res) => {
   res.redirect('http://localhost:5173');
 })
@@ -76,25 +78,31 @@ app.get(
 );
 // Logout Route
 app.get('/api/logout', (req, res) => {
-  req.logout();
-  req.session.destroy() // Logout from Passport.js
-  res.clearCookie('connection.sid'); // Clear the session cookie
-  req.logout((err) => { // Passport's logout method
+  req.logout((err) => {
     if (err) {
       return res.status(500).send('Error logging out');
     }
-    req.session.destroy((err) => { // Destroy the session
+    req.session.destroy(req.sessionID, (err) => {
       if (err) {
         return res.status(500).send('Error destroying session');
       }
-  res.clearCookie('connection.sid'); // Clear the session cookie
-      res.send('ok'); // Send the final response
+      res.clearCookie('connection.sid');
+      res.send('Logged out');
     });
   });
 });
 
+
 app.get('/api/current_user', (req, res) => {
-  res.send(req.user);
+  console.log('Session ID:', req.sessionID);
+  console.log('Session Data:', req.session);
+  
+  if (req.isAuthenticated()) {
+    res.json({ user: req.user });
+
+  } else {
+    res.json({ user: null });
+  }
 });
 
 app.put('/update', async (req, res) => {
