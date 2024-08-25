@@ -5,17 +5,12 @@ import session from 'express-session';
 import passport from 'passport';
 import './pass.js';
 import MongoStore from 'connect-mongo';
-
-// import bodyParser from 'body-parser';
-// import jwt from 'jsonwebtoken';
 import cors from 'cors';
-// import {OAuth2Client} from 'google-auth-library';
-// import {userModel} from "./mongo/schema.js";
- 
-import { readFood } from './mongo/read.js';
+
+import { readAdmins, readById, readFood, readUsers } from './mongo/read.js';
 import { CreateFood } from './mongo/create.js';
-import { deleteFood } from './mongo/delete.js';
-import { updateFood } from './mongo/update.js';
+import { deleteData } from './mongo/delete.js';
+import { updateItem, updateUser } from './mongo/update.js';
 
 
 dotenv.config();
@@ -102,10 +97,51 @@ app.get('/api/current_user', (req, res) => {
   res.send(req.user);
 });
 
+app.put('/update', async (req, res) => {
+  const {endpoint, id, data} = req.body;
+  await updateItem(endpoint, id, data);
+  res.send({
+    "message": "Data updated successfully"
+  })
+})
 
-app.get('/food', async (req, res) => {
+
+app.get('/Users', async (req, res) => {
+  const users = await readUsers();
+  res.send(users);
+})
+
+app.get('/Admins', async (req, res) => {
+  const users = await readAdmins();
+  res.send(users);
+})
+
+app.get('/Foods', async (req, res) => {
   const food = await readFood();
   res.send(food);
+})
+
+app.post('/search', async (req, res) => {
+  const {endpoint, id} = req.body;
+  console.log(endpoint, id);
+  const food = await readById(endpoint, id);
+  res.send(food);
+  
+})
+app.post('/delete', async (req, res) => {
+  const {endpoint, id} = req.body;
+  console.log(endpoint, id);
+  const response = await deleteData(endpoint, id);
+  res.send({
+    "message": "Data deleted successfully"
+  })
+})
+app.put('/users/update', async (req, res) => {
+  const {id, role} = req.body;
+  const response = await updateUser(id, role);
+  res.send({
+    "message": {response}
+  })
 })
 
 app.post('/createFood', async (req, res) => {
@@ -115,21 +151,6 @@ app.post('/createFood', async (req, res) => {
     "message": "Data added successfully"
   })
   
-})
-app.put('/updateFood', async (req, res) => {
-  const {name, description, price, image, rating, isVeg} = req.body;
-  const id = req.query.id;
-  await updateFood(id, name, description, price, image, rating, isVeg);
-  res.send({
-    "message": "Data updated successfully"
-  })
-})
-app.delete('/deleteFood/:id', async (req, res) => {
-  const id = req.params.id;
-  await deleteFood(id);
-  res.send({
-    "message": "Data deleted successfully"
-  })
 })
 
 connection();

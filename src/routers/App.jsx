@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
-import './App.css'
-import Loader from './components/render/Loader'
-import Render from './components/render/Render'
+import Loader from '../components/render/Loader'
+import Render from '../components/render/Render'
 
 function App() {
 
