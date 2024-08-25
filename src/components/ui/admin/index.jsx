@@ -1,13 +1,12 @@
 import React, { Suspense, useEffect, useState } from "react";
 import "./styles.scss";
 import { RiUserSearchLine, RiAdminLine } from "react-icons/ri";
-import { IoFastFoodOutline, IoLogOutOutline } from "react-icons/io5";
+import { IoFastFoodOutline, IoLogOutOutline, IoCloseOutline } from "react-icons/io5";
 import { readData } from "../../funcs/useFetch";
-// import {FiEdit2} from 'react-icons/fi';
+
 import {
   FaRegEdit,
   FaRegTrashAlt,
-  FaRegWindowClose,
   FaSpinner,
 } from "react-icons/fa";
 import axios from "axios";
@@ -20,7 +19,6 @@ function Dashboard() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
-  // const [updateData, SetUpdateData] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -30,14 +28,14 @@ function Dashboard() {
   const [isVeg, setIsVeg] = useState(false);
   const [description, setDescription] = useState("");
 
-  const [imgLoad, setImgLoad] = useState(false);
   const [image, setImage] = useState("");
-  const [key, setKey] = useState();
-
+  const [key, setKey] = useState('');
 
   const [user, setUser] = useState(false);
   const [role, setRole] = useState("");
   const [create, setCreate] = useState(false);
+  const [id, setId] = useState("");
+  const [update, setUpdate] = useState(false);
 
   const keys =
     data && data.length > 0
@@ -48,7 +46,7 @@ function Dashboard() {
     reFetch();
     if (activeTab === "Users" || activeTab === "Admins") {
       setUser(true);
-      data[0]?.role ? setRole(data[0].role) : setRole("");
+      data[0]?.role ? setRole(data[0].role) : "";
     }
   }, [activeTab]);
 
@@ -87,13 +85,15 @@ function Dashboard() {
           },
         },
       });
-      // SetUpdateData(response.data);
+
       setName(response.data.name);
       setPrice(response.data.price);
       setRating(response.data.rating);
       setIsVeg(response.data.isVeg);
       setImage(response.data.image);
       setDescription(response.data.description);
+      console.log(response.data);
+
       setLoading(false);
       // setVisible(true)
     } catch (error) {
@@ -105,15 +105,12 @@ function Dashboard() {
     try {
       const response = await axios.put(`http://localhost:8080/update`, {
         id: id,
-        endpoint: activeTab,
-        data: {
-          name: name,
-          description: description,
-          price: price,
-          image: image,
-          rating: rating,
-          isVeg: isVeg,
-        },
+        name: name,
+        description: description,
+        price: price,
+        image: image,
+        rating: rating,
+        isVeg: isVeg,
       });
       console.log("Item updated:", response.data);
       setVisible(false);
@@ -123,14 +120,12 @@ function Dashboard() {
   };
 
   const handleUserUpdate = async (id) => {
-    try {
-      const response = await axios.put(`http://localhost:8080/users/update`, {
-        id: id,
-        role: role,
-      });
-      console.log("User updated:", response.data);
-      setVisible(false);
-    } catch (error) {}
+    const response = await axios.put(`http://localhost:8080/users/update`, {
+      id: id,
+      role: role,
+    });
+    console.log("User updated:", response.data);
+    setVisible(false);
   };
 
   const handleCreate = async () => {
@@ -154,49 +149,53 @@ function Dashboard() {
     const files = e.target.files;
     const file = files[0];
 
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith("image/")) {
       setKey(file);
-}
-    else {
+    } else {
       setImage("couldn't upload, please upload image!");
     }
-}
+  }
 
-async function PostImage(string) {
-  let url = `https://api.imgbb.com/1/upload?key=205b43fdaf7fa938b57fa8ab143d8685`;
-  const data = new FormData();
-  data.append('image', string);
-  try {
-    const response = await axios.post(url, data);
-    if (response.status !== 200) {
+  async function PostImage(string) {
+    let url = `https://api.imgbb.com/1/upload?key=205b43fdaf7fa938b57fa8ab143d8685`;
+    const data = new FormData();
+    data.append("image", string);
+    try {
+      const response = await axios.post(url, data);
+      if (response.status !== 200) {
+        console.log("error");
+        return;
+      }
+      console.log(response.data.data.url);
+      setImage(response.data.data.url);
+    } catch {
       console.log("error");
-      return;
     }
-    console.log(response.data.data.url);
-    setImage(response.data.data.url);
-   
   }
-  catch {
-    console.log("error");
-  }
-}
 
-if(key) {
-  PostImage(key);
-}
+  if (key) {
+    PostImage(key);
+  }
 
   return (
     <div className="container">
-      {visible || create ? (
+      {visible || create || update ? (
         <>
           <div className="dark"></div>
-          {create ? (
+          {create || (update && activeTab === "Foods") ? (
             <div className="visible">
               <h1>
-                Create Data{" "}
-                <FaRegWindowClose
+                {create ? "Create Data" : "Update Data"}
+                <IoCloseOutline
                   className="icons"
-                  onClick={() => setCreate(false)}
+                  onClick={() => {
+                    setCreate(false), setUpdate(false), setVisible(false);
+                    setName(""),
+                      setPrice(""),
+                      setRating(""),
+                      setIsVeg(false),
+                      setDescription("");
+                  }}
                 />
               </h1>
               <form className="form">
@@ -229,25 +228,39 @@ if(key) {
                   <option>Yes</option>
                   <option>No</option>
                 </select>
-                {
-                image!=='' ? (
-                <div className="imgCont">
-                  <h3>Image uploaded Successfully!!</h3>
-                  <img src={image} alt="uploaded" className='uploadedImage' />
-                </div>
+                {image !== "" ? (
+                  <div className="imgCont">
+                    {create ? (
+                      <h3>Image uploaded Successfully!!</h3>
+                    ) : (
+                      <input
+                        onChange={UploadImage}
+                        style={{ width: "60%", height: "6rem" }}
+                        accept="image/*"
+                        type="file"
+                      />
+                    )}
+                    <img src={image} alt="uploaded" className="uploadedImage" />
+                  </div>
                 ) : (
-                  <input onChange={UploadImage} accept="image/*" type="file"/>
-                )
-              }
+                  <input onChange={UploadImage} accept="image/*" type="file" />
+                )}
                 <textarea
                   type="text"
                   placeholder="Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
-                <button style={{ cursor: "pointer" }} onClick={handleCreate}>
-                  Create
+                  {create && (
+                    <button style={{ cursor: "pointer" }} onClick={handleCreate}>
+                  Create Data
                 </button>
+                )}
+                {update && (
+                  <button style={{ cursor: "pointer" }} onClick={() => handleUpdate(id)}>
+                  Update Data
+                </button>
+                )}
               </form>
             </div>
           ) : (
@@ -343,9 +356,11 @@ if(key) {
                                         <>
                                           {typeof item[key] === "string" &&
                                           item[key].startsWith("http") &&
-                                          (item[key].includes('googleusercontent') || item[key].includes('i.ibb.co'))
+                                          (item[key].includes(
+                                            "googleusercontent"
+                                          ) ||
+                                            item[key].includes("i.ibb.co")) &&
                                           // item[key].includes("googleusercontent")
-                                             &&
                                           item[key].slice(0, 50) ? (
                                             <img
                                               src={item[key]}
@@ -378,8 +393,12 @@ if(key) {
                                       size={18}
                                       onClick={() => {
                                         {
-                                          handleEdit("edit", item._id),
-                                            setVisible(true);
+                                          setVisible(true);
+                                          setUpdate(true);
+                                          update
+                                            ? console.log("nalla")
+                                            : handleEdit("edit", item._id),
+                                            setId(item._id);
                                         }
                                       }}
                                     />
@@ -390,13 +409,18 @@ if(key) {
                                         handleEdit("delete", item._id);
                                       }}
                                     />
-                                    {visible && user && activeTab !== 'Foods' ? (
+                                    {visible &&
+                                    user &&
+                                    activeTab !== "Foods" ? (
                                       <div className="visible userEd">
                                         <h1>
                                           Edit Data{" "}
-                                          <FaRegWindowClose
+                                          <IoCloseOutline
                                             className="icons"
-                                            onClick={() => setVisible(false)}
+                                            onClick={() => {
+                                              setVisible(false),
+                                                setUpdate(false);
+                                            }}
                                           />
                                         </h1>
                                         <form className="form">

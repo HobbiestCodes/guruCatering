@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import passport from 'passport';
+import passport from 'passport'; 
 import './pass.js';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
@@ -10,7 +10,7 @@ import cors from 'cors';
 import { readAdmins, readById, readFood, readUsers } from './mongo/read.js';
 import { CreateFood } from './mongo/create.js';
 import { deleteData } from './mongo/delete.js';
-import { updateItem, updateUser } from './mongo/update.js';
+import { updateFood, updateUser } from './mongo/update.js';
 
 
 dotenv.config();
@@ -98,8 +98,9 @@ app.get('/api/current_user', (req, res) => {
 });
 
 app.put('/update', async (req, res) => {
-  const {endpoint, id, data} = req.body;
-  await updateItem(endpoint, id, data);
+  const {id, name, description, price, image, rating, isVeg} = req.body;
+  // console.log(id, name, description, price, image, rating, isVeg);
+  const response = await updateFood(id, name, description, price, image, rating, isVeg);
   res.send({
     "message": "Data updated successfully"
   })
@@ -123,14 +124,12 @@ app.get('/Foods', async (req, res) => {
 
 app.post('/search', async (req, res) => {
   const {endpoint, id} = req.body;
-  console.log(endpoint, id);
   const food = await readById(endpoint, id);
   res.send(food);
   
 })
 app.post('/delete', async (req, res) => {
   const {endpoint, id} = req.body;
-  console.log(endpoint, id);
   const response = await deleteData(endpoint, id);
   res.send({
     "message": "Data deleted successfully"
