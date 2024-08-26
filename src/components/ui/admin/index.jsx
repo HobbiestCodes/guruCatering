@@ -219,6 +219,7 @@ function Dashboard() {
                   value={rating}
                   onChange={(e) => setRating(e.target.value)}
                 />
+                
                 <select
                   name="isVeg"
                   value={isVeg}

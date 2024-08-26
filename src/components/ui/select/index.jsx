@@ -2,8 +2,18 @@ import React from "react";
 import "./styles.scss";
 import {motion} from "framer-motion";
 import eg from '/assets/food 1.png'
+import {IoArrowForwardOutline} from 'react-icons/io5';
 
 function Selection() {
+  var settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+  };
+
     const array = [
         1,2,3,4,5,6,7,8,9,10,11, 12,13,14,15,16,17,18,19, 20
     ]
@@ -27,6 +37,8 @@ function Selection() {
           <h1>Shahi Paneer</h1>
         </motion.div>
       <div className="portions upper">
+
+
         <motion.div
         initial={{
             // y: 100,
@@ -60,6 +72,10 @@ function Selection() {
             </div>
           ))}
         </motion.div>
+
+      </div>
+      <div className="button">
+        <button>View more <IoArrowForwardOutline /></button>
       </div>
     </div>
   );

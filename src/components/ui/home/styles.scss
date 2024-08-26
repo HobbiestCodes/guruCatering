@@ -36,9 +36,9 @@
       margin-top: 1.5%;
       font-size: 18px;
       color: white;
-      span {
-        color: $warn;
-      }
+      // span {
+      //   color: $warn;
+      // }
     }
     h1 {
       font-size: 5rem;
@@ -46,24 +46,24 @@
       font-weight: 800;
       font-family: "Open Sans", sans-serif;
 
-      span {
-        color: $primary;
-      }
+      // span {
+      //   color: $primary;
+      // }
     }
     h2 {
       font-size: 4rem;
       letter-spacing: 1.5px;
       font-weight: 300;
-      span {
-        color: $primary;
-      }
+      // span {
+      //   color: $primary;
+      // }
     }
     .buttons {
         @include flex();
         gap: 1.4rem;
       button {
-        border-radius: 30px;
-        background-color: $atc;
+        border-radius: 10px;
+        background-color: $primary;
         color: white;
         padding: 6px 16px;
         border: none;
@@ -72,20 +72,19 @@
         font-weight: 300;
         letter-spacing: 1.5px;
         cursor: pointer;
-        border: 1px solid $atc;
+        border: 2px solid $primary;
         transition: 0.1s all cubic-bezier(0.25, 0.46, 0.45, 0.94);
         &:hover {
-            background-color: transparent;
-            color: $atc;  
-            transform: scale(1.1);
-            // margin-top: -10px;
+            background-color: transparent; 
+            // transform: scale(0.9);
+            margin-top: -5px;
         }
         &.outline {
           background-color: transparent;
-          color: $atc;
+          color: $white;
           font-weight: 400;
         &:hover {
-            background-color: $atc;
+            background-color: $primary;
             color: white;
         }
         }

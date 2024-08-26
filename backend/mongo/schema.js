@@ -54,8 +54,10 @@ const foodSchema = new mongoose.Schema({
         type: Boolean,
         required: true
     },
-    createdAt: Date,
-    updatedAt: Date
+    catogery: {
+        type: String,
+        required: true
+    }
 })
 
 const foodModel = mongoose.model('foods', foodSchema);

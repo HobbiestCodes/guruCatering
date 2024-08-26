@@ -1,6 +1,5 @@
 import React from 'react'
 import {Canvas} from "@react-three/fiber"
-import {Model} from "./../render/Model";
 import { Scroll, ScrollControls } from '@react-three/drei';
 import CameraAnimation from './AnimatedCam';
 import Home from '../pages/Home';
