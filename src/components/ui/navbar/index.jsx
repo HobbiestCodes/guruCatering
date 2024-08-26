@@ -3,6 +3,7 @@ import "./styles.scss";
 import logo from "/logo.png";
 import { motion } from "framer-motion";
 import Login from "../../funcs/Logged";
+import { Link } from 'react-router-dom' 
 
 function Navbar() {
     const container = {
@@ -54,14 +55,19 @@ function Navbar() {
         variants={container}
         >
           {tabs.map((tab, index) => (
+          // <Link to={`/${tab.toLowerCase()}`}>
             <motion.li
             variants={item}
-              key={tab}
-              className={`${activeTab === tab ? `active` : "unselected"}`}
-              onClick={() => setActiveTab(tab)}
-            >
+            key={tab}
+            className={`${activeTab === tab ? `active` : "unselected"}`}
+            onClick={() =>
+              {
+                setActiveTab(tab)
+              }}
+                >
               {tab}
             </motion.li>
+            // </Link>
           ))}
         </motion.ul>
 

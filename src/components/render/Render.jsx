@@ -1,18 +1,19 @@
 import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from "react";
-import eg from "/assets/food 1.png";
+import eg from "/topView.png";
 // import {Model} from "./../render/Model";
 import { Scroll, ScrollControls } from "@react-three/drei";
 import Home from "../pages/Home";
 import Modal from "../ui/modal";
-import Selection from "./../ui/select/index";
+import Selection from "../ui/select/index";
 import CameraAnimation from "./AnimatedCam";
 import { Simple } from "./Simple";
-import { FaMinus, FaPlus } from "react-icons/fa6";
+import Cards from "../ui/modal/Cards";
 
 function Render() {
   const [itemsToShow, setItemsToShow] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
   const foodItems = [
     {
       id: 1,
@@ -183,37 +184,11 @@ function Render() {
 
   console.log(itemsToShow);
   function handleClose() {
-    setIsModalOpen(false);
+    setIsModalOpen(!isModalOpen);
   }
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
-      <Modal
-        isOpen={isModalOpen}
-        itemsToShow={itemsToShow}
-        onClose={handleClose}
-      >
-        <div className="modal-items">
-          {itemsToShow.length > 0 &&
-            itemsToShow.map((item) => (
-              <div className="modal-item" key={item.id}>
-                <img src={item.img} alt={item.name + " image"} />
-                <div className="modal-item-texts">
-                  <div className="modal-item-name">{item.name}</div>
-                  <div className="modal-item-quantity">x1</div>
-                </div>
-                <div className="modal-item-btns">
-                  <div className="modal-item-btn">
-                    <FaPlus />
-                  </div>
-                  <div className="modal-item-btn">
-                    <FaMinus />
-                  </div>
-                </div>
-              </div>
-            ))}
-        </div>
-      </Modal>
       <Canvas>
         <ScrollControls pages={2} damping={1}>
           <CameraAnimation />
@@ -223,7 +198,21 @@ function Render() {
               <Home />
             </div>
 
-            <div style={{ width: "100vw", height: "100vh" }}>
+            <div
+              style={{ width: "100vw", height: "100vh", position: "relative" }}
+            >
+              <Modal
+                isOpen={isModalOpen}
+                itemsToShow={itemsToShow}
+                onClose={handleClose}
+                items={itemsToShow}
+                setItemsToShow={setItemsToShow}
+              >
+                <div className="modal-items">
+                  {itemsToShow.length > 0 &&
+                    itemsToShow.map((item) => <Cards item={item} key={item} />)}
+                </div>
+              </Modal>
               <Selection
                 foodItems={foodItems}
                 setItemsToShow={setItemsToShow}

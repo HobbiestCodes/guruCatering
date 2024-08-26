@@ -5,41 +5,94 @@
   right: 2%;
   top: 10px;
   width: 400px;
-  height: 300px;
+  // height: auto;
+  max-height: 300px;
   background-color: #fff;
   border: none;
   border-radius: 15px;
   box-shadow: 0px 0px 8px #11111110;
-  outline: none;
-  // overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
 
+  transition: 0.3s min-height ease-in-out;
   .top-of-modal {
     @include flex($jc: space-between, $al: center);
     width: 100%;
-    padding: 10px 10px 5px 10px;
-
+    padding: 10px 15px 10px 10px;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
     h3 {
+      color: grey;
+      font-weight: 400;
       font-size: $md;
     }
 
+    &.down {
+      bottom: 0;
+    }
     .close-btn {
       cursor: pointer;
+    }
+    .clear {
+      cursor: pointer;
+      padding: 0px 0px 0px 10px;
+      transition: 0.3s all cubic-bezier(0.23, 1, 0.320, 1);
+      &:hover {
+        transform: scale(0.9);
+      }
+    }
+    .proceed {
+      cursor: pointer;
+      padding: 0px 8px;
+      font-size: 16px;
+      font-weight: 400;
+      background-color: $primary;
+      color: white;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      @include flex();
+      gap: 0.3rem;
+      .tolTip {
+        display: none;
+      }
+      &.notAllowed {
+        cursor: not-allowed;
+        opacity: 0.5;
+        position: relative;
+        .tolTip {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          font-size: 14px;
+          background: $primary;
+          border-radius: 5px;
+          @include flex;
+          opacity: 0;
+          z-index: -1;
+          transition: 0.2s all ease;
+          color: $white;
+        }
+        &:hover {
+          transform: scale(1);
+          .tolTip {
+            opacity: 1;
+            z-index: 1;
+          }
+        }
+      }
     }
   }
 
   .modal-items {
-    background-color: #fff;
     height: 100%;
     width: 100%;
     padding-bottom: 5px;
-
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-
-    overflow-y: scroll; /* or auto */
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-
+    
     .modal-item {
       @include flex($jc: space-between, $al: center);
       // background-color: burlywood;
@@ -65,13 +118,14 @@
         .modal-item-quantity {
           font-size: 12px;
           user-select: none;
+          color: grey;
         }
       }
 
       .modal-item-btns {
-        @include flex($jc: center, $al: center, $fd: column);
-        width: 10%;
-        gap: 6px;
+        @include flex($jc: flex-start, $al: flex-start);
+        width: 20%;
+        gap: 12px;
       }
 
       .modal-item-btn {
@@ -80,7 +134,15 @@
         padding: 2px;
         font-size: medium;
         border-radius: 3px;
+        color: $primary;
 
+      .min {
+        color: $grey;
+        &:hover {
+          background-color: $primary;
+          color: $white;
+        }
+      }
         &:hover {
           background-color: $primary;
           color: $white;

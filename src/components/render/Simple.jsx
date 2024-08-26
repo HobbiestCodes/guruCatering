@@ -56,129 +56,41 @@ export function Simple(props) {
 
   return (
     <group {...props} dispose={null}>
-      <directionalLight
-        castShadow
-        intensity={4}
-        position={[-1.701, 7.049, -1.602]}
-        rotation={[-1.806, -0.308, -2.24]}
-        target={nodes["TriLamp-Back001"].target}
-      >
-        <primitive
-          object={nodes["TriLamp-Back001"].target}
-          position={[0, 0, -1]}
-        />
+      <directionalLight  castShadow receiveShadow intensity={4} position={[-1.701, 7.049, -1.602]} rotation={[-1.806, -0.308, -2.24]} target={nodes['TriLamp-Back001'].target}>
+        <primitive object={nodes['TriLamp-Back001'].target} position={[0, 0, -1]} />
       </directionalLight>
-      <directionalLight
-        castShadow
-        intensity={2}
-        ref={ref}
-        position={[-7.233, 7.207, 4.936]}
-        rotation={[-0.868, -0.723, -0.663]}
-        target={nodes["TriLamp-Back002"].target}
-      >
-        <primitive
-          object={nodes["TriLamp-Back002"].target}
-          position={[0, 0, -1]}
-        />
+      <directionalLight castShadow receiveShadow intensity={2} ref={ref} position={[-7.233, 7.207, 4.936]} rotation={[-0.868, -0.723, -0.663]} target={nodes['TriLamp-Back002'].target}>
+        <primitive object={nodes['TriLamp-Back002'].target} position={[0, 0, -1]} />
       </directionalLight>
-      <pointLight
-        castShadow
-        intensity={4}
-        decay={1}
-        position={[4.171, 2.808, -0.496]}
-        rotation={[-2.25, 0.727, 2.453]}
-      />
-      <pointLight
-        castShadow
-        intensity={4}
-        decay={1}
-        position={[-0.486, 3.889, -0.576]}
-        rotation={[-2.25, 0.727, 2.453]}
-      />
-      <pointLight
-        castShadow
-        intensity={4}
-        decay={1}
-        position={[0.811, 0.701, 0.45]}
-        rotation={[-0.388, 0.413, 0.162]}
-      />
-      <pointLight
-        castShadow
-        intensity={4}
-        decay={1}
-        position={[-1.672, 0.701, 0.45]}
-        rotation={[-0.388, -0.734, -0.267]}
-      />
-      <pointLight
-        castShadow
-        intensity={1}
-        decay={2}
-        color="#ff9d00"
-        position={[4.454, 3.717, -3.401]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
-      <pointLight
-        castShadow
-        intensity={1}
-        decay={2}
-        color="#ff9d00"
-        position={[4.997, 3.717, -3.401]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
-      <pointLight
-        castShadow
-        intensity={1}
-        decay={2}
-        color="#ff9d00"
-        position={[-5.577, 3.717, -3.401]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
-      <pointLight
-        castShadow
-        intensity={1}
-        decay={2}
-        color="#ff9d00"
-        position={[-5.234, 3.717, -3.401]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
-
-      <motion.group
-        initial={{ rotate: 180, scale: 0, y: 10 }}
-        animate={{ rotate: 0, scale: 1, y: 0 }}
-        transition={{ duration: 1.3, delay: 0.7, damping: 0.3 }}
-      >
-        <mesh
-          castShadow
-          geometry={nodes.Cube.geometry}
-          material={materials.dull_mat}
-          position={[-0.464, 1.233, -0.016]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cube002.geometry}
-          material={materials["Material.001"]}
-          position={[-0.464, 1.271, -3.954]}
-        />
-        <mesh
-          castShadow
-          geometry={nodes.Cube003.geometry}
-          material={materials.golden}
-          position={[-0.463, 1.359, -0.017]}
-        />
-      </motion.group>
-
+      <pointLight castShadow receiveShadow intensity={2} decay={0} position={[4.171, 2.808, -0.496]} rotation={[-2.25, 0.727, 2.453]} />
+      <pointLight castShadow receiveShadow intensity={2} decay={0} position={[-0.486, 3.889, -0.576]} rotation={[-2.25, 0.727, 2.453]} />
+      <pointLight castShadow receiveShadow intensity={1} decay={0} position={[0.811, 0.701, 0.45]} rotation={[-0.388, 0.413, 0.162]} />
+      <pointLight castShadow receiveShadow intensity={1} decay={0} position={[-1.672, 0.701, 0.45]} rotation={[-0.388, -0.734, -0.267]} />
+      <pointLight castShadow receiveShadow intensity={4} decay={2} color="#ff9d00" position={[4.454, 3.717, -3.401]} rotation={[-Math.PI / 2, 0, 0]} />
+      <pointLight castShadow receiveShadow intensity={4} decay={2} color="#ff9d00" position={[4.997, 3.717, -3.401]} rotation={[-Math.PI / 2, 0, 0]} />
+      <pointLight castShadow receiveShadow intensity={4} decay={2} color="#ff9d00" position={[-5.577, 3.717, -3.401]} rotation={[-Math.PI / 2, 0, 0]} />
+      <pointLight castShadow receiveShadow intensity={4} decay={2} color="#ff9d00" position={[-5.234, 3.717, -3.401]} rotation={[-Math.PI / 2, 0, 0]} />
+      
+    <motion.group
+     initial={{ rotate: 180, scale: 0, y: 10 }}
+     animate={{ rotate: 0, scale: 1, y: 0 }}
+     transition={{ duration: 1.3, delay: 0.7, damping: 0.3 }}
+    >
+      <mesh castShadow receiveShadow geometry={nodes.Cube.geometry} material={materials.dull_mat} position={[-0.464, 1.233, -0.016]} />
+      <mesh castShadow receiveShadow geometry={nodes.Cube002.geometry} material={materials['Material.001']} position={[-0.464, 1.271, -3.954]} />
+      <mesh castShadow receiveShadow geometry={nodes.Cube003.geometry} material={materials.golden} position={[-0.463, 1.359, -0.017]} />
+    </motion.group>
+      
       <group position={[-0.418, 0.694, 0.001]} scale={[0.683, 0.594, 0.6]}>
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.5, delay: 0.3 }}
-          geometry={nodes.Cylinder004.geometry}
-          material={materials.golden}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Cylinder004.geometry} material={materials.golden} />
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.5, delay: 0.3 }}
           geometry={nodes.Cylinder004_1.geometry}
@@ -195,87 +107,66 @@ export function Simple(props) {
 
       <group position={[2.329, 0.013, -0.831]} scale={0.018} ref={chair3}>
         <motion.mesh
-          castShadow
-          initial={{ rotate: 360, y: -300, opacity: 0 }}
-          animate={{ rotate: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
-          geometry={nodes.meshChair.geometry}
-          material={materials.dull_mat}
-        />
+
+castShadow receiveShadow
+initial={{ rotate: 360, y: -300, opacity: 0 }}
+         animate={{ rotate: 0, y: 0, opacity: 1 }}
+         transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
+        geometry={nodes.meshChair.geometry} material={materials.dull_mat} />
         <motion.mesh
-          castShadow
-          initial={{ rotate: 360, y: -300, opacity: 0 }}
-          animate={{ rotate: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
-          geometry={nodes.meshChair_1.geometry}
-          material={materials["Material.003"]}
-        />
+
+castShadow receiveShadow
+initial={{ rotate: 360, y: -300, opacity: 0 }}
+         animate={{ rotate: 0, y: 0, opacity: 1 }}
+         transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
+        geometry={nodes.meshChair_1.geometry} material={materials['Material.003']} />
         <motion.mesh
-          castShadow
-          initial={{ rotate: 360, y: -300, opacity: 0 }}
-          animate={{ rotate: 0, y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
-          geometry={nodes.meshChair_2.geometry}
-          material={materials["Material.001"]}
-        />
+
+castShadow receiveShadow
+initial={{ rotate: 360, y: -300, opacity: 0 }}
+         animate={{ rotate: 0, y: 0, opacity: 1 }}
+         transition={{ duration: 1, delay: 0.9, damping: 0.5 }}
+        geometry={nodes.meshChair_2.geometry} material={materials['Material.001']} />
       </group>
 
-      <group
-        position={[3.746, 0.013, 0.012]}
-        rotation={[0, -1.571, 0]}
-        scale={0.018}
-        ref={chair_right}
-      >
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+      <group position={[3.746, 0.013, 0.012]} rotation={[0, -1.571, 0]} scale={0.018} ref={chair_right}>
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
-          geometry={nodes.meshChair002.geometry}
-          material={materials.dull_mat}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+        geometry={nodes.meshChair002.geometry} material={materials.dull_mat} />
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
-          geometry={nodes.meshChair002_1.geometry}
-          material={materials["Material.003"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+        geometry={nodes.meshChair002_1.geometry} material={materials['Material.003']} />
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
           geometry={nodes.meshChair002_2.geometry}
           material={materials["Material.001"]}
         />
       </group>
-      <group
-        position={[-4.642, 0.013, 0.012]}
-        rotation={[0, 1.571, 0]}
-        scale={0.018}
-        ref={chair_left}
-      >
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+      <group position={[-4.642, 0.013, 0.012]} rotation={[0, 1.571, 0]} scale={0.018} ref={chair_left}>
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
-          geometry={nodes.meshChair001.geometry}
-          material={materials.dull_mat}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+        geometry={nodes.meshChair001.geometry} material={materials.dull_mat} />
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
-          geometry={nodes.meshChair001_1.geometry}
-          material={materials["Material.003"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ rotate: 360, z: -300, opacity: 0 }}
+        geometry={nodes.meshChair001_1.geometry} material={materials['Material.003']} />
+        <motion.mesh 
+        castShadow receiveShadow
+         initial={{ rotate: 360, z: -300, opacity: 0 }}
           animate={{ rotate: 0, z: 0, opacity: 1 }}
           transition={{ duration: 1.5, delay: 1.5, damping: 0.5 }}
           geometry={nodes.meshChair001_2.geometry}
@@ -284,31 +175,27 @@ export function Simple(props) {
       </group>
 
       <group position={[-0.472, 1.368, 0]} scale={0.026} ref={candles1}>
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh002.geometry}
-          material={materials["Material.002"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh002.geometry} material={materials['Material.002']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh002_1.geometry}
-          material={materials.candle_holder}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh002_1.geometry} material={materials.candle_holder} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
@@ -319,31 +206,27 @@ export function Simple(props) {
         />
       </group>
       <group position={[0.953, 1.368, 0]} scale={0.026} ref={candles2}>
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh003.geometry}
-          material={materials["Material.002"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh003.geometry} material={materials['Material.002']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh003_1.geometry}
-          material={materials.candle_holder}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh003_1.geometry} material={materials.candle_holder} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
@@ -354,31 +237,27 @@ export function Simple(props) {
         />
       </group>
       <group position={[-1.907, 1.368, 0]} scale={0.026} ref={candles3}>
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh004.geometry}
-          material={materials["Material.002"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh004.geometry} material={materials['Material.002']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.Mesh004_1.geometry}
-          material={materials.candle_holder}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.Mesh004_1.geometry} material={materials.candle_holder} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
@@ -388,65 +267,47 @@ export function Simple(props) {
           material={materials.dull_mat}
         />
       </group>
-      <mesh
-        receiveShadow
-        geometry={nodes.Plane001.geometry}
-        material={materials.bg}
-        position={[-1, -0.5, 0.269]}
-        scale={[-5, -5.979, -2.552]}
-      />
-      <group
-        position={[-0.289, 3.774, -3.656]}
-        rotation={[-Math.PI / 2, Math.PI / 2, 0]}
-        scale={[0.035, 0.035, 0.044]}
-      >
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+      <mesh receiveShadow geometry={nodes.Plane001.geometry} material={materials.bg} position={[-1, -0.5, 0.269]} scale={[-5, -5.979, -2.552]} />
+      <group position={[-0.289, 3.774, -3.656]} rotation={[-Math.PI / 2, Math.PI / 2, 0]} scale={[0.035, 0.035, 0.044]}>
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.lamp_1.geometry}
-          material={materials.glass}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.lamp_1.geometry} material={materials.glass} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.lamp_2.geometry}
-          material={materials["black metal"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.lamp_2.geometry} material={materials['black metal']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.lamp_3.geometry}
-          material={materials["GOld metal"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.lamp_3.geometry} material={materials['GOld metal']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
             delay: 2,
           }}
-          geometry={nodes.lamp_4.geometry}
-          material={materials["Material.006"]}
-        />
-        <motion.mesh
-          castShadow
-          initial={{ scale: 0 }}
+        geometry={nodes.lamp_4.geometry} material={materials['Material.006']} />
+        <motion.mesh 
+        castShadow receiveShadow
+        initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
             duration: 1,
