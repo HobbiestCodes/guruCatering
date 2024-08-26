@@ -8,7 +8,7 @@ const CameraAnimation = () => {
 
   const initialPosition = [-0.177, 5.299, 15];
   const initialRotation = [-0.191, 0.018, 0.003];
-  const finalPosition = [-0.4, 12, 0.5];
+  const finalPosition = [-0.4, 12, 0.75];
   const finalRotation = [-1.5, 0, 0];
 
   useFrame(() => {
