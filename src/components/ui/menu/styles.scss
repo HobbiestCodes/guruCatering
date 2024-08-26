@@ -22,28 +22,7 @@
             overflow-y: scroll;
             @include flex(flex-start, flex-start);
             gap: 2rem;
-
-            &::-webkit-scrollbar {
-                width: 0px;
-              }
-              
-              /* Track */
-              &::-webkit-scrollbar-track {
-                box-shadow: inset 0 0 5px transparent; 
-                border-radius: 0;
-              }
-               
-              /* Handle */
-              &::-webkit-scrollbar-thumb {
-                background: transparent; 
-                border-radius: 0;
-              }
-              
-              /* Handle on hover */
-              &::-webkit-scrollbar-thumb:hover {
-                background: transparent; 
-              }
-
+            scrollbar-width: none;
             .box {
                 width: 17rem;
                 height: 22rem;

@@ -83,6 +83,8 @@
           background-color: transparent;
           color: $white;
           font-weight: 400;
+          backdrop-filter: blur(10px);
+          // border-color: $white;
         &:hover {
             background-color: $primary;
             color: white;
