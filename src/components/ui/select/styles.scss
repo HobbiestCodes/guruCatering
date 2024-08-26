@@ -1,121 +1,130 @@
 @import "./../../sass/global";
 
 .selection {
-    @include fullScreen();
-    @include flex(center, center, $fd: column);
-    position: relative;
-    .title {
-        position: absolute;
-        top: 20%;
-        left: 2%;
-        h1 {
-            font-family: 'Inter', sans-serif;
-            letter-spacing: -2px;
+  @include fullScreen();
+  @include flex(center, center, $fd: column);
+  position: relative;
+  .title {
+    position: absolute;
+    top: 20%;
+    left: 2%;
+    h1 {
+      font-family: "Inter", sans-serif;
+      letter-spacing: -2px;
+      font-weight: 600;
+      font-size: 3rem;
+    }
+  }
+  .portions {
+    width: 100%;
+    height: 50%;
+    padding: 10px 3%;
+    // background-color: blue;
+    .box {
+      width: 100%;
+      height: 90%;
+      @include flex(flex-start, flex-start);
+      padding: 1.5% 10%;
+      gap: 1rem;
+      row-gap: 0;
+      // background-color: red;
+      .imgContainer {
+        width: 6rem;
+        height: 6rem;
+        // background-color: black;
+        @include flex(flex-start, flex-start, column);
+        border-radius: 100%;
+        position: relative;
+        cursor: pointer;
+        transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        &:hover {
+          transform: scale(1.2);
+          .popUp {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 100%;
+          object-fit: cover;
+        }
+        .popUp {
+          position: absolute;
+          inset: 0;
+          top: -150%;
+          left: -70%;
+          background: #ffffff;
+          width: 14rem;
+          height: 10rem;
+          border-radius: 10px;
+          box-shadow: 0px 0px 8px #11111110;
+          opacity: 0;
+          transform: scale(0);
+          transition: 0.4s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          padding: 10px;
+          h1 {
+            font-size: 1.2rem;
             font-weight: 600;
-            font-size: 3rem;
-        }
-    }
-    .portions {
-        width: 100%;
-        height: 50%;
-        padding: 10px 3%;
-        // background-color: blue;
-        .box {
+          }
+          p {
+            font-weight: 300;
+            color: grey;
+            font-size: 12px;
+          }
+          h2 {
+            margin-top: 3%;
+            font-size: 1.1rem;
+            color: #353535;
+          }
+          .downContainer {
+            @include flex(space-between, flex-end);
             width: 100%;
-            height: 90%;
-            @include flex(flex-start, flex-start);
-            padding: 1.5% 10%;
-            gap: 1rem;
-            row-gap: 0;
-            // background-color: red;
-            .imgContainer {
-                width: 6rem;
-                height: 6rem;
-                // background-color: black;
-                @include flex(flex-start, flex-start, column);
-                border-radius: 100%;
-                position: relative;
-                cursor: pointer;
-                transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                &:hover {
-                    transform: scale(1.2);
-                    .popUp {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-                }
-                img {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 100%;
-                    object-fit: cover;
-                }
-                .popUp {
-                    position: absolute;
-                    inset: 0;
-                    top: -150%;
-                    left: -70%;
-                    background: #ffffff;
-                    width: 14rem;
-                    height: 10rem;
-                    border-radius: 10px;
-                    box-shadow: 0px 0px 8px #11111110;
-                    opacity: 0;
-                    transform: scale(0);
-                    transition: 0.4s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                    padding: 10px;
-                    h1 {
-                        font-size: 1.2rem;
-                        font-weight: 600;
-                    }
-                    p {
-                        font-weight: 300;
-                        color: grey;
-                        font-size: 12px;
-                    }
-                    h2 {
-                        margin-top: 3%;
-                        font-size: 1.1rem;
-                        color: #353535
-                    }
-                .downContainer {
-                    @include flex(space-between, flex-end);
-                    width: 100%;
-                    padding: 0px 1%;
-                    .veg {
-                        margin-top: 10%;
-                        width: 1rem;
-                        height: 1rem;
-                        border: 2px solid brown;
-                        @include flex();
-                        .dot {
-                            width: 0.5rem;
-                            height: 0.5rem;
-                            background-color: brown;
-                            border-radius: 50px;
-                        }
-                    }
-                    .addToCart {
-                        p {
-                            font-size: 16px;
-                            color: $primary;
-                            font-weight: 400;
-                            cursor: pointer;
-                            transition: 0.3s ease;
-                            &:hover {
-                                transform: scale(0.9)
-                            }
-
-                        }
-                    }
-                }
-                }
+            padding: 0px 1%;
+            .veg {
+              margin-top: 10%;
+              width: 1rem;
+              height: 1rem;
+              border: 2px solid brown;
+              @include flex();
+              .dot {
+                width: 0.5rem;
+                height: 0.5rem;
+                background-color: brown;
+                border-radius: 50px;
+              }
             }
+            .addToCart {
+              p {
+                font-size: 16px;
+                color: $primary;
+                font-weight: 400;
+                cursor: pointer;
+                transition: 0.3s ease;
+                &:hover {
+                  transform: scale(0.9);
+                }
+              }
+            }
+            .alreadyToCart {
+              p {
+                @include flex($jc: space-between, $al: center);
+                gap: 2px;
+                font-size: 16px;
+                color: $secondary;
+                font-weight: 400;
+                transition: 0.3s ease;
+              }
+            }
+          }
         }
+      }
     }
-    .upper {
-        .box {
-            @include flex(flex-start, flex-end);
-        }
+  }
+  .upper {
+    .box {
+      @include flex(flex-start, flex-end);
     }
+  }
 }

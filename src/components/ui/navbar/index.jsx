@@ -26,7 +26,7 @@ function Navbar() {
 
   const tabs = ["Home", "Menu", "Special Dishes", "Hotels", "Contact Us"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  console.log(activeTab);
+  // console.log(activeTab);
 
   return (
     <motion.nav className="navbar">

@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Login = () => {
   const {user, loading} = useAuth();
-  console.log(user);
+  // console.log(user);
   
   const handleGoogleLogin = () => {
     window.open("http://localhost:8080/auth/google", "_self");
