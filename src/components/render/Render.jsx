@@ -13,6 +13,7 @@ import Cards from "../ui/modal/Cards";
 function Render() {
   const [itemsToShow, setItemsToShow] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(true);
+
   const foodItems = [
     {
       id: 1,
@@ -197,21 +198,21 @@ function Render() {
               <Home />
             </div>
 
-            <div style={{ width: "100vw", height: "100vh", position: 'relative' }}>
-            <Modal
-        isOpen={isModalOpen}
-        itemsToShow={itemsToShow}
-        onClose={handleClose}
-        items={itemsToShow}
-        setItemsToShow={setItemsToShow}
-      >
-        <div className="modal-items">
-          {itemsToShow.length > 0 &&
-            itemsToShow.map((item) => (
-              <Cards item={item} key={item} />
-            ))}
-        </div>
-      </Modal>
+            <div
+              style={{ width: "100vw", height: "100vh", position: "relative" }}
+            >
+              <Modal
+                isOpen={isModalOpen}
+                itemsToShow={itemsToShow}
+                onClose={handleClose}
+                items={itemsToShow}
+                setItemsToShow={setItemsToShow}
+              >
+                <div className="modal-items">
+                  {itemsToShow.length > 0 &&
+                    itemsToShow.map((item) => <Cards item={item} key={item} />)}
+                </div>
+              </Modal>
               <Selection
                 foodItems={foodItems}
                 setItemsToShow={setItemsToShow}

@@ -1,4 +1,3 @@
-import React from 'react'
 import './styles.scss';
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
