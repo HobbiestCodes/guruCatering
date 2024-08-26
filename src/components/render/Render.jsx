@@ -4,6 +4,8 @@ import {Model} from "./../render/Model";
 import { Scroll, ScrollControls } from '@react-three/drei';
 import CameraAnimation from './AnimatedCam';
 import Home from '../pages/Home';
+import Selection from './../ui/select/index';
+import { Simple } from './Simple';
 
 function Render() {
   return (
@@ -12,15 +14,14 @@ function Render() {
     <Canvas>
         <ScrollControls pages={2} damping={1}>
             <CameraAnimation />
-        <Model />
+        <Simple />
         <Scroll html>
             <div style={{width: '100vw', height: '100vh'}}>
-                {/* <Navbar /> */}
                 <Home />
             </div>
         
             <div style={{width: '100vw', height: '100vh'}}>
-                
+                <Selection />
             </div>
         </Scroll>
         </ScrollControls>
