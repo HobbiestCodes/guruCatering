@@ -1,9 +1,19 @@
+import { useState } from "react";
 import "./styles.scss";
-import { IoIosArrowUp, IoIosArrowRoundForward} from "react-icons/io";
+import { IoIosArrowUp, IoIosArrowRoundForward } from "react-icons/io";
 
-const Modal = ({ isOpen, onClose, children, items, setItemsToShow }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  children,
+  isOrderPlaced,
+  setIsOrderPlaced,
+  triggerFormSubmit,
+  items,
+  setItemsToShow,
+}) => {
   const modalStyle = {
-      height: isOpen ? 'auto' : '45px',
+    height: isOpen ? "auto" : "45px",
   };
 
   return (
@@ -11,22 +21,58 @@ const Modal = ({ isOpen, onClose, children, items, setItemsToShow }) => {
       <div className="top-of-modal" onClick={onClose}>
         <h3>Your plate</h3>
         <div className="close-btn">
-          <IoIosArrowUp height={18} width={18} style={isOpen ? { transform: 'rotate(0deg)', transition: '0.2s all ease' } : {transform: 'rotate(180deg)', transition: '0.2s all ease'}} />
+          <IoIosArrowUp
+            height={18}
+            width={18}
+            style={
+              isOpen
+                ? { transform: "rotate(0deg)", transition: "0.2s all ease" }
+                : { transform: "rotate(180deg)", transition: "0.2s all ease" }
+            }
+          />
         </div>
       </div>
       {items.length > 0 ? (
-        <>
-        {children}
-        </>
-      ) : <h1 style={{textAlign: 'center', fontSize: '16px', marginBottom: '10px', color: 'grey', fontWeight: '300'}}>Your plate is empty!</h1>}
-    {items.length > 0 ? (
-      <div className="top-of-modal down">
-          <h3 className="clear" onClick={() => setItemsToShow([])}>clear</h3>
-          <button className={`proceed ${items.length > 4 ? '' : 'notAllowed'}`}>Place order <IoIosArrowRoundForward size={30} />
-          <div className="tolTip">Minimum order is 5</div>
+        <>{children}</>
+      ) : (
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "16px",
+            marginBottom: "10px",
+            color: "grey",
+            fontWeight: "300",
+          }}
+        >
+          Your plate is empty!
+        </h1>
+      )}
+      {/* {items.length > 0 ? (
+        <div className="top-of-modal down">
+          <h3
+            className="clear"
+            onClick={() => {
+              setItemsToShow([]);
+              setIsOrderPlaced(() => false);
+            }}
+          >
+            clear
+          </h3>
+          <button
+            className={`proceed ${items.length > 4 ? "" : "notAllowed"}`}
+            style={{
+              backgroundColor:
+                isOrderPlaced && items.length > 4 ? "#54d661" : "",
+            }}
+            onClick={() => {
+              setIsOrderPlaced(() => true);
+            }}
+          >
+            Place order <IoIosArrowRoundForward size={30} />
+            <div className="tolTip">Minimum order is 5</div>
           </button>
-      </div>
-        ) : null}
+        </div>
+      ) : null} */}
     </div>
   );
 };

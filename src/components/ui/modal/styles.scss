@@ -38,7 +38,7 @@
     .clear {
       cursor: pointer;
       padding: 0px 0px 0px 10px;
-      transition: 0.3s all cubic-bezier(0.23, 1, 0.320, 1);
+      transition: 0.3s all cubic-bezier(0.23, 1, 0.32, 1);
       &:hover {
         transform: scale(0.9);
       }
@@ -62,6 +62,7 @@
         cursor: not-allowed;
         opacity: 0.5;
         position: relative;
+
         .tolTip {
           position: absolute;
           inset: 0;
@@ -86,13 +87,40 @@
     }
   }
 
+  #form {
+    .container {
+      height: 100%;
+      width: 100%;
+
+      label {
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .inputField {
+        width: 100%;
+        margin: 10px;
+        height: 2rem;
+        background-color: #eee;
+        border-radius: 10px;
+        outline: none;
+        border: none;
+        padding: 10px 3%;
+        font-weight: 400;
+        font-size: 1.1rem;
+        resize: none;
+        margin-top: 2px;
+      }
+    }
+  }
+
   .modal-items {
     height: 100%;
     width: 100%;
     padding-bottom: 5px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    
+
     .modal-item {
       @include flex($jc: space-between, $al: center);
       // background-color: burlywood;
@@ -136,13 +164,13 @@
         border-radius: 3px;
         color: $primary;
 
-      .min {
-        color: $grey;
-        &:hover {
-          background-color: $primary;
-          color: $white;
+        .min {
+          color: $grey;
+          &:hover {
+            background-color: $primary;
+            color: $white;
+          }
         }
-      }
         &:hover {
           background-color: $primary;
           color: $white;

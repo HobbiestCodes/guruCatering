@@ -69,7 +69,10 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
                     <div
                       className="addToCart"
                       onClick={() =>
-                        setItemsToShow((items) => [...items, item])
+                        setItemsToShow((items) => [
+                          ...items,
+                          { ...item, quantity: 1 },
+                        ])
                       }
                     >
                       <p>Add to plate + </p>
