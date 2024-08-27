@@ -188,6 +188,9 @@ function Render() {
     e.preventDefault();
     // Handle form submission logic here
     console.log("Form submitted", { phoneNumber, address, date });
+    setPhoneNumber("");
+    setAddress("");
+    setDate("");
   };
 
   const triggerFormSubmit = (e) => {
