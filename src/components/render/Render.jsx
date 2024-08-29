@@ -201,14 +201,12 @@ function Render() {
     }
   };
 
+  const handleClose = () => setIsModalOpen(!isModalOpen);
+
   useEffect(() => {
     // Open the modal when itemsToShow is updated
     setIsModalOpen(itemsToShow.length > 0);
   }, [itemsToShow]);
-
-  function handleClose() {
-    setIsModalOpen(!isModalOpen);
-  }
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
