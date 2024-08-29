@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import eg from "/topView.png";
 // import {Model} from "./../render/Model";
 import { Scroll, ScrollControls } from "@react-three/drei";
@@ -9,10 +9,18 @@ import Selection from "../ui/select/index";
 import CameraAnimation from "./AnimatedCam";
 import { Simple } from "./Simple";
 import Cards from "../ui/modal/Cards";
+import { motion, AnimatePresence } from "framer-motion";
+import { IoIosArrowRoundForward } from "react-icons/io";
 
 function Render() {
   const [itemsToShow, setItemsToShow] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+  const [date, setDate] = useState("");
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+  const formRef = useRef(null);
+
   const foodItems = [
     {
       id: 1,
@@ -176,12 +184,28 @@ function Render() {
     },
   ];
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log("Form submitted", { phoneNumber, address, date });
+    setPhoneNumber("");
+    setAddress("");
+    setDate("");
+  };
+
+  const triggerFormSubmit = (e) => {
+    e.preventDefault();
+    console.log("hi");
+    if (formRef.current) {
+      formRef.current.requestSubmit();
+    }
+  };
+
   useEffect(() => {
     // Open the modal when itemsToShow is updated
     setIsModalOpen(itemsToShow.length > 0);
   }, [itemsToShow]);
 
-  console.log(itemsToShow);
   function handleClose() {
     setIsModalOpen(!isModalOpen);
   }
@@ -197,21 +221,120 @@ function Render() {
               <Home />
             </div>
 
-            <div style={{ width: "100vw", height: "100vh", position: 'relative' }}>
-            <Modal
-        isOpen={isModalOpen}
-        itemsToShow={itemsToShow}
-        onClose={handleClose}
-        items={itemsToShow}
-        setItemsToShow={setItemsToShow}
-      >
-        <div className="modal-items">
-          {itemsToShow.length > 0 &&
-            itemsToShow.map((item) => (
-              <Cards item={item} key={item} />
-            ))}
-        </div>
-      </Modal>
+            <div
+              style={{ width: "100vw", height: "100vh", position: "relative" }}
+            >
+              <Modal
+                isOpen={isModalOpen}
+                itemsToShow={itemsToShow}
+                onClose={handleClose}
+                isOrderPlaced={isOrderPlaced}
+                setIsOrderPlaced={setIsOrderPlaced}
+                triggerFormSubmit={triggerFormSubmit}
+                items={itemsToShow}
+                setItemsToShow={setItemsToShow}
+              >
+                <AnimatePresence>
+                  {isOrderPlaced ? (
+                    <motion.form
+                      id="form"
+                      ref={formRef}
+                      onSubmit={handleSubmit}
+                      initial={{ x: -500, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{
+                        duration: 1.2,
+                        type: "spring",
+                      }}
+                    >
+                      <div className="container">
+                        <label htmlFor="phone-number">Phone Number:</label>
+                        <input
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          type="number"
+                          className="inputField"
+                          name="phone-number"
+                        />
+                      </div>
+                      <div className="container">
+                        <label htmlFor="address">Address:</label>
+                        <input
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          type="text"
+                          className="inputField"
+                          name="address"
+                        />
+                      </div>
+                      <div className="container">
+                        <label htmlFor="Date">Date</label>
+                        <input
+                          type="date"
+                          value={date}
+                          onChange={(e) => setDate(e.target.value)}
+                          className="inputField"
+                        />
+                      </div>
+                    </motion.form>
+                  ) : (
+                    <motion.div
+                      id="modalItems"
+                      className="modal-items"
+                      initial={{ x: 500, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: 500, opacity: 0 }}
+                      transition={{
+                        duration: 1.2,
+                        type: "spring",
+                      }}
+                    >
+                      {itemsToShow.length > 0 &&
+                        itemsToShow.map((item) => (
+                          <Cards
+                            item={item}
+                            key={item.id}
+                            setItemsToShow={setItemsToShow}
+                          />
+                        ))}
+                    </motion.div>
+                  )}
+                  {itemsToShow.length > 0 ? (
+                    <div className="top-of-modal down">
+                      <h3
+                        className="clear"
+                        onClick={() => {
+                          setItemsToShow([]);
+                          setIsOrderPlaced(() => false);
+                        }}
+                      >
+                        clear
+                      </h3>
+                      <button
+                        className={`proceed ${
+                          itemsToShow.length > 4 ? "" : "notAllowed"
+                        }`}
+                        style={{
+                          backgroundColor:
+                            isOrderPlaced && itemsToShow.length > 4
+                              ? "#54d661"
+                              : "",
+                        }}
+                        onClick={(e) => {
+                          setIsOrderPlaced(() => true);
+                          address &&
+                            phoneNumber &&
+                            date &&
+                            triggerFormSubmit(e);
+                        }}
+                      >
+                        Place order <IoIosArrowRoundForward size={30} />
+                        <div className="tolTip">Minimum order is 5</div>
+                      </button>
+                    </div>
+                  ) : null}
+                </AnimatePresence>
+              </Modal>
               <Selection
                 foodItems={foodItems}
                 setItemsToShow={setItemsToShow}
