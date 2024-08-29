@@ -27,9 +27,13 @@ function Dashboard() {
   const [rating, setRating] = useState("");
   const [isVeg, setIsVeg] = useState(false);
   const [description, setDescription] = useState("");
+  const [catogery, setCatogery] = useState('common');
+  const [catogeries, setCatogeries] = useState('');
+  const [createCatogery, setCreateCatogery] = useState(false);
 
   const [image, setImage] = useState("");
   const [key, setKey] = useState('');
+
 
   const [user, setUser] = useState(false);
   const [role, setRole] = useState("");
@@ -37,9 +41,10 @@ function Dashboard() {
   const [id, setId] = useState("");
   const [update, setUpdate] = useState(false);
 
+
   const keys =
     data && data.length > 0
-      ? Object.keys(data[0]).filter((key) => key !== "_id" && key !== "__v")
+      ? Object.keys(data[0]).filter((key) => key !== "_id" && key !== "__v" && key !== "orders")
       : [];
 
   useEffect(() => {
@@ -92,7 +97,8 @@ function Dashboard() {
       setIsVeg(response.data.isVeg);
       setImage(response.data.image);
       setDescription(response.data.description);
-      console.log(response.data);
+      setCatogery(response.data.catogery);
+      // console.log(response.data);
 
       setLoading(false);
       // setVisible(true)
@@ -111,6 +117,7 @@ function Dashboard() {
         image: image,
         rating: rating,
         isVeg: isVeg,
+        catogery: catogery,
       });
       console.log("Item updated:", response.data);
       setVisible(false);
@@ -128,7 +135,43 @@ function Dashboard() {
     setVisible(false);
   };
 
+  const getCatogery = async (action, id) => {
+    let url = '';
+    let method = 'GET';
+
+    if (action === 'read') {
+      url = `http://localhost:8080/catogery`,
+      method = 'GET'
+    }
+    else if (action === 'create') {
+        url = `http://localhost:8080/catogery/create`,
+        method = 'POST'
+    }
+    else if (action === 'delete') {
+        url = `http://localhost:8080/catogery/delete`
+        method = 'DELETE'
+    }
+    else if (action === 'update') {
+        url = `http://localhost:8080/catogery/update`,
+        method = 'PUT'
+    }
+    
+    const options = {
+      method: method,
+      url: url,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        id: id,
+        name: catogery,
+      }
+    }
+    const response = await axios.request(options);
+    setCatogeries(response.data);
+  }
   const handleCreate = async () => {
+
     try {
       const response = await axios.post(`http://localhost:8080/createFood`, {
         name: name,
@@ -137,6 +180,7 @@ function Dashboard() {
         image: image,
         rating: rating,
         isVeg: isVeg,
+        catogery: catogery,
       });
       console.log("Item created:", response.data);
       setVisible(false);
@@ -179,7 +223,23 @@ function Dashboard() {
 
   return (
     <div className="container">
-      {visible || create || update ? (
+      {
+        createCatogery ? <div className="visible userEd create" >
+          <h1>Create Catogery <IoCloseOutline
+                                            className="icons"
+                                            onClick={() => {
+                                              setVisible(false),
+                                                setCreateCatogery(false);
+                                                
+                                            }}
+                                          /></h1>
+          <form className="form">
+          <input type="text" value={catogery} onChange={(e) => setCatogery(e.target.value)} />
+            <button onClick={() => getCatogery('create')}>Create</button>
+          </form>
+        </div> : ""
+      }
+      {visible || create || update || createCatogery ? (
         <>
           <div className="dark"></div>
           {create || (update && activeTab === "Foods") ? (
@@ -225,9 +285,22 @@ function Dashboard() {
                   value={isVeg}
                   onChange={(e) => setIsVeg(e.target.value)}
                 >
-                  <option disabled>Veg ?</option>
-                  <option>Yes</option>
+                  <option disabled>Veg?</option>
+                  <option >Yes</option>
                   <option>No</option>
+                </select>
+                <select
+                  name="isVeg"
+                  value={catogery}
+                  onChange={(e) => setCatogery(e.target.value)}
+                  defaultValue={'Catogery'}
+                >
+                  <option>Catogery</option>
+                  {catogeries.length > 0 && catogeries.map((catogery) => (
+                    <option key={catogery._id} value={catogery.name}>
+                      {catogery.name}
+                    </option>
+                  ))}
                 </select>
                 {image !== "" ? (
                   <div className="imgCont">
@@ -278,10 +351,19 @@ function Dashboard() {
             <button
               className="btn"
               onClick={() => {
-                setCreate(true);
+                setCreate(true),
+                getCatogery('read')
               }}
             >
               Add Food +
+            </button>
+            <button
+              className="btn catogery"
+              onClick={() => {
+                setCreateCatogery(true)
+              }}
+            >
+              Add Catogery +
             </button>
           </div>
         </div>
@@ -324,7 +406,8 @@ function Dashboard() {
                 <table cellPadding="0" cellSpacing="0" border="0">
                   <thead>
                     <tr>
-                      {keys.map((key) => (
+                      {keys
+                      .map((key) => (
                         <th key={key}>{key}</th>
                       ))}
                       <div className="empty"></div>
@@ -349,7 +432,7 @@ function Dashboard() {
                           <>
                             <tr>
                               {Object.keys(item)
-                                .filter((key) => key !== "_id" && key !== "__v")
+                                .filter((key) => key !== "_id" && key !== "__v" && key !== "orders")
                                 .map((key) => (
                                   <>
                                     <td key={key}>

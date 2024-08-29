@@ -1,7 +1,11 @@
 // import mongoose from "mongoose";
 import foodModel from "./schema.js";
-export async function CreateFood(name, description, price, image, rating, isVeg, isAvailable) {
+import { catogeryModel } from "./schema.js";
+
+export async function CreateFood(name, description, price, image, rating, isVeg, catogery) {
     try {
+        // console.log(name, description, price, image, rating, isVeg, catogery);
+        
         const foods = new foodModel({
                name: name,
                 description: description,
@@ -9,7 +13,7 @@ export async function CreateFood(name, description, price, image, rating, isVeg,
                 image: image,
                 rating: rating,
                 isVeg: isVeg,
-                isAvailable: isAvailable,
+                catogery: catogery
         })
         await foods.save();
     }
@@ -19,3 +23,15 @@ export async function CreateFood(name, description, price, image, rating, isVeg,
     }
 }
 
+
+export async function Catogery(name) {
+    try {
+        const catogery = new catogeryModel({
+            name: name
+        })
+        await catogery.save();
+    }
+    catch(e) {
+        console.log("error" + e);       
+    }
+}

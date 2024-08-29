@@ -1,4 +1,4 @@
-import foodModel from "./schema.js";
+import foodModel, { catogeryModel } from "./schema.js";
 import { userModel } from "./schema.js";
 
 export const readFood = async () => {
@@ -26,3 +26,7 @@ export const readAdmins = async () => {
     return data;
 };
 
+export const readCatogery = async () => {
+    const data = await catogeryModel.find()
+    return data;
+}

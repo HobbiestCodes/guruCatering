@@ -14,7 +14,19 @@
         width: 100%;
         height: 90%;
         overflow: hidden;
-        // background: #000;
+        @include flex(flex-end, flex-end);
+       
+        .filter {
+            width: 12rem;
+            height: 2rem;
+            @include flex();
+            background: rgba($color: grey, $alpha: 0.1);
+            border-radius: 5px;
+            gap: 0.6rem;
+            color: grey;
+            outline: none;
+            border: none;
+        }
         .bigBox {
             padding: 1% 0px;
             width: 100%;

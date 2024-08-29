@@ -7,10 +7,10 @@ import './passport.js';
 import MongoStore from 'connect-mongo';
 import cors from 'cors';
 
-import { readAdmins, readById, readFood, readUsers } from './mongo/read.js';
-import { CreateFood } from './mongo/create.js';
-import { deleteData } from './mongo/delete.js';
-import { updateFood, updateUser } from './mongo/update.js';
+import { readAdmins, readById, readCatogery, readFood, readUsers } from './mongo/read.js';
+import { Catogery, CreateFood } from './mongo/create.js';
+import { deleteCatogery, deleteData } from './mongo/delete.js';
+import { updateCatogery, updateFood, updateUser } from './mongo/update.js';
 
 
 dotenv.config();
@@ -93,6 +93,35 @@ app.get('/api/logout', (req, res) => {
 });
 
 
+
+//  Api call to get the list of catogeries
+app.get('/catogery', async (req, res) => {
+  const response = await readCatogery();
+  res.send(response);
+})
+
+app.delete('/catogery/delete', async (req, res) => {
+  const {id} = req.body;
+  const response = await deleteCatogery(id);
+  res.send(response);
+})
+
+app.post('/catogery/create', async (req, res) => {
+  const data = req.body;
+  const response = await Catogery(data.name);
+  res.send(response);
+  
+})
+
+
+app.put('/catogery/update', async (req, res) => {
+  const {id, name} = req.body;
+  const response = await updateCatogery(id, name);
+  res.send(response);
+})
+
+
+
 app.get('/api/current_user', (req, res) => {
   console.log('Session ID:', req.sessionID);
   console.log('Session Data:', req.session);
@@ -125,6 +154,7 @@ app.get('/Admins', async (req, res) => {
   res.send(users);
 })
 
+// api to calls the list of foods
 app.get('/Foods', async (req, res) => {
   const food = await readFood();
   res.send(food);
@@ -152,8 +182,10 @@ app.put('/users/update', async (req, res) => {
 })
 
 app.post('/createFood', async (req, res) => {
-  const {name, description, price, image, rating, isVeg} = req.body;
-  await CreateFood(name, description, price, image, rating, isVeg);
+  const {name, description, price, image, rating, isVeg, catogery} = req.body;
+  // console.log(name, description, price, image, rating, isVeg, catogery);
+  // console.log(catogery);
+  await CreateFood(name, description, price, image, rating, isVeg, catogery);
   res.send({
     "message": "Data added successfully"
   })

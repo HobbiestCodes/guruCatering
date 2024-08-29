@@ -23,10 +23,25 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user',
 
+    }, 
+    orders: {
+        type: [],
+        required: false,
     }
 })
 
 export const userModel = mongoose.model('users', userSchema);
+
+
+const catogerySchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    }
+})
+
+export const catogeryModel = mongoose.model('catogery', catogerySchema);
+
 
 
 const foodSchema = new mongoose.Schema({
