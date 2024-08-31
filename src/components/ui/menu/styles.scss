@@ -1,113 +1,151 @@
-@import '../../sass/global';
+@import "../../sass/global";
 
 .parent {
-    @include fullScreen();
-    padding: 1% 1.5%;
+  @include fullScreen();
+  padding: 1% 1.5%;
 
-    .upper {
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
-        }
+  .upper {
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 300;
     }
-    .child {
-        width: 100%;
-        height: 90%;
+  }
+  .child {
+    width: 100%;
+    height: 90%;
+    overflow: hidden;
+    // background: #000;
+    .bigBox {
+      padding: 1% 0px;
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      @include flex(flex-start, flex-start);
+      gap: 2rem;
+      scrollbar-width: none;
+      .box {
+        width: 17rem;
+        height: 22rem;
+        position: relative;
+        @include flex(flex-end, flex-end);
         overflow: hidden;
-        // background: #000;
-        .bigBox {
-            padding: 1% 0px;
-            width: 100%;
-            height: 100%;
-            overflow-y: scroll;
-            @include flex(flex-start, flex-start);
-            gap: 2rem;
-            scrollbar-width: none;
-            .box {
-                width: 17rem;
-                height: 22rem;
-                position: relative;
-                @include flex(flex-end, flex-end);
-                overflow: hidden;
-                border-radius: 18px;
-                img {
-                    position: absolute;
-                    inset: 0;
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 18px;
-                    // z-index: -1;
-                }
-                .content {
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba($color: #000000, $alpha: 0.6);
-                    // backdrop-filter: blur(1px);
-                    position: relative;
-                    z-index: 2;
-                    border-radius: 150px 150px 0px 0px;
-                    transform: scale(1.5) translateY(60%);
-                    @include flex(flex-start, center, column);
-                    color: white;
-                    padding: 5% 3%;
-                    transition: 0.3s all cubic-bezier(0.215, 0.610, 0.355, 1);
-                    h1 {
-                        text-align: center;
-                        width: 9rem;
-                        font-size: 1.3rem;
-                    }
-                    p {
-                        font-size: 14px;
-                        font-weight: 300;
-                        font-family: var(--font-pop);
-                        opacity: 0;
-                    }
-                    .more {
-                        margin-top: 4%;
-                        opacity: 0;
-                        p {
-                            font-size: 18px;
-                            font-weight: 400;
-                            span {
-                                font-weight: 600;
-                            }
-                        }
-                    }
-                    button {    
-                        background-color: rgba($color: $primary, $alpha: 0.5);
-                        backdrop-filter: blur(6px);
-                        border: none;
-                        outline: none;
-                        font-size: 18px;
-                        font-weight: 400;
-                        padding: 6px 12px;
-                        color: white;
-                        border-radius: 6px;
-                        position: absolute;
-                        bottom: 5%;
-                        right: 5%;
-                        opacity: 0;
-                        cursor: pointer;
+        border-radius: 18px;
 
-                    }
-                }
-                &:hover {
-                    .content {
-                        border-radius: 0px;
-                        transform: scale(1) translateY(0%);
-                        @include flex(flex-start, flex-start, column);
-                        h1 {
-                            font-size: 1.8rem;
-                            width: auto;
-                        }
-                        p, .more, button {
-                            transition: 0.2s all ease;
-                            opacity: 1;
-                        }
-                    }
-                }
-            }
+        @include media(tablet) {
+          width: 15rem;
+          height: 19rem;
         }
+        @include media(mobile) {
+          width: 13rem;
+          height: 17rem;
+        }
+        img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 18px;
+          // z-index: -1;
+        }
+        .content {
+          width: 100%;
+          height: 100%;
+          background-color: rgba($color: #000000, $alpha: 0.6);
+          // backdrop-filter: blur(1px);
+          position: relative;
+          z-index: 2;
+          border-radius: 150px 150px 0px 0px;
+          transform: scale(1.5) translateY(60%);
+          @include flex(flex-start, center, column);
+          color: white;
+          padding: 5% 3%;
+          transition: 0.3s all cubic-bezier(0.215, 0.61, 0.355, 1);
+          h1 {
+            text-align: center;
+            width: 9rem;
+            font-size: 1.3rem;
+
+            @include media(tablet) {
+              font-size: 1.1rem;
+            }
+            @include media(mobile) {
+              font-size: 0.9rem;
+            }
+          }
+          p {
+            font-size: 14px;
+            font-weight: 300;
+            font-family: var(--font-pop);
+            opacity: 0;
+          }
+          .more {
+            margin-top: 4%;
+            opacity: 0;
+            p {
+              font-size: 18px;
+              font-weight: 400;
+              span {
+                font-weight: 600;
+              }
+
+              @include media(tablet) {
+                font-size: 16px;
+              }
+              @include media(mobile) {
+                font-size: 14px;
+              }
+            }
+          }
+          button {
+            background-color: rgba($color: $primary, $alpha: 0.5);
+            backdrop-filter: blur(6px);
+            border: none;
+            outline: none;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 6px 12px;
+            color: white;
+            border-radius: 6px;
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            opacity: 0;
+            cursor: pointer;
+
+            @include media(tablet) {
+              font-size: 16px;
+            }
+            @include media(mobile) {
+              font-size: 14px;
+            }
+          }
+        }
+        &:hover {
+          .content {
+            border-radius: 0px;
+            transform: scale(1) translateY(0%);
+            @include flex(flex-start, flex-start, column);
+            h1 {
+              font-size: 1.8rem;
+              width: auto;
+
+              @include media(tablet) {
+                font-size: 1.6rem;
+              }
+              @include media(mobile) {
+                font-size: 1.4rem;
+              }
+            }
+            p,
+            .more,
+            button {
+              transition: 0.2s all ease;
+              opacity: 1;
+            }
+          }
+        }
+      }
     }
+  }
 }
