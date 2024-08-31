@@ -1,24 +1,30 @@
-import React, { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.scss";
 import { RiUserSearchLine, RiAdminLine } from "react-icons/ri";
-import { IoFastFoodOutline, IoLogOutOutline, IoCloseOutline } from "react-icons/io5";
-import { readData } from "../../funcs/useFetch";
-
 import {
-  FaRegEdit,
-  FaRegTrashAlt,
-  FaSpinner,
-} from "react-icons/fa";
+  IoFastFoodOutline,
+  IoLogOutOutline,
+  IoCloseOutline,
+} from "react-icons/io5";
+import { readData } from "../../funcs/useFetch";
+import useAuth from "../../funcs/useAuth";
+
+import { FaRegEdit, FaRegTrashAlt, FaSpinner } from "react-icons/fa";
 import axios from "axios";
+import { GoListUnordered } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const tabs = [
     { title: "Admins", icon: RiAdminLine },
     { title: "Users", icon: RiUserSearchLine },
     { title: "Foods", icon: IoFastFoodOutline },
+    { title: "Orders", icon: GoListUnordered },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
+  const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -29,7 +35,7 @@ function Dashboard() {
   const [description, setDescription] = useState("");
 
   const [image, setImage] = useState("");
-  const [key, setKey] = useState('');
+  const [key, setKey] = useState("");
 
   const [user, setUser] = useState(false);
   const [role, setRole] = useState("");
@@ -177,6 +183,8 @@ function Dashboard() {
     PostImage(key);
   }
 
+  if (currentUser && currentUser.role !== "admin") return navigate("/");
+
   return (
     <div className="container">
       {visible || create || update ? (
@@ -219,7 +227,7 @@ function Dashboard() {
                   value={rating}
                   onChange={(e) => setRating(e.target.value)}
                 />
-                
+
                 <select
                   name="isVeg"
                   value={isVeg}
@@ -252,15 +260,18 @@ function Dashboard() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
-                  {create && (
-                    <button style={{ cursor: "pointer" }} onClick={handleCreate}>
-                  Create Data
-                </button>
+                {create && (
+                  <button style={{ cursor: "pointer" }} onClick={handleCreate}>
+                    Create Data
+                  </button>
                 )}
                 {update && (
-                  <button style={{ cursor: "pointer" }} onClick={() => handleUpdate(id)}>
-                  Update Data
-                </button>
+                  <button
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleUpdate(id)}
+                  >
+                    Update Data
+                  </button>
                 )}
               </form>
             </div>
@@ -349,41 +360,49 @@ function Dashboard() {
                           <>
                             <tr>
                               {Object.keys(item)
-                                .filter((key) => key !== "_id" && key !== "__v")
-                                .map((key) => (
-                                  <>
-                                    <td key={key}>
-                                      {
-                                        <>
-                                          {typeof item[key] === "string" &&
-                                          item[key].startsWith("http") &&
-                                          (item[key].includes(
-                                            "googleusercontent"
-                                          ) ||
-                                            item[key].includes("i.ibb.co")) &&
-                                          // item[key].includes("googleusercontent")
-                                          item[key].slice(0, 50) ? (
-                                            <img
-                                              src={item[key]}
-                                              alt={`Image ${index}`}
-                                              style={{
-                                                width: "35px",
-                                                borderRadius: "50px",
-                                                height: "auto",
-                                              }}
-                                            />
-                                          ) : item[key] === true ? (
-                                            "Yes"
-                                          ) : item[key] === false ? (
-                                            "No"
-                                          ) : (
-                                            item[key]
-                                          )}
-                                        </>
-                                      }
-                                    </td>
-                                  </>
-                                ))}
+                                .filter(
+                                  (key) => key !== "_id" && key !== "__v"
+                                  //  && key !== "userId"
+                                )
+                                .map((key) => {
+                                  // console.log(item);
+                                  return (
+                                    <>
+                                      <td key={key}>
+                                        {
+                                          <>
+                                            {typeof item[key] === "string" &&
+                                            item[key].startsWith("http") &&
+                                            (item[key].includes(
+                                              "googleusercontent"
+                                            ) ||
+                                              item[key].includes("i.ibb.co")) &&
+                                            // item[key].includes("googleusercontent")
+                                            item[key].slice(0, 50) ? (
+                                              <img
+                                                src={item[key]}
+                                                alt={`Image ${index}`}
+                                                style={{
+                                                  width: "35px",
+                                                  borderRadius: "50px",
+                                                  height: "auto",
+                                                }}
+                                              />
+                                            ) : item[key] === true ? (
+                                              "Yes"
+                                            ) : item[key] === false ? (
+                                              "No"
+                                            ) : Array.isArray(item[key]) ? (
+                                              item[key].length
+                                            ) : (
+                                              item[key]
+                                            )}
+                                          </>
+                                        }
+                                      </td>
+                                    </>
+                                  );
+                                })}
                               <div className="empty">
                                 {loading ? (
                                   <FaSpinner className="spinner" />
@@ -412,7 +431,8 @@ function Dashboard() {
                                     />
                                     {visible &&
                                     user &&
-                                    activeTab !== "Foods" ? (
+                                    activeTab !== "Foods" &&
+                                    activeTab !== "Orders" ? (
                                       <div className="visible userEd">
                                         <h1>
                                           Edit Data{" "}

@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import eg from "/topView.png";
 // import {Model} from "./../render/Model";
 import { Scroll, ScrollControls } from "@react-three/drei";
@@ -11,15 +11,20 @@ import { Simple } from "./Simple";
 import Cards from "../ui/modal/Cards";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowRoundForward } from "react-icons/io";
+import axios from "axios";
+import useAuth from "../funcs/useAuth";
 
 function Render() {
   const [itemsToShow, setItemsToShow] = useState([]);
+  // const [resData, setResData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [date, setDate] = useState("");
+  const [status, setStatus] = useState({ status: "", message: "" });
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
   const formRef = useRef(null);
+  const { user } = useAuth();
 
   const foodItems = [
     {
@@ -184,13 +189,61 @@ function Render() {
     },
   ];
 
-  const handleSubmit = (e) => {
+  const validatePhone = (phone) => {
+    const phonePattern = /^[0-9]{10}$/;
+    return phonePattern.test(phone);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted", { phoneNumber, address, date });
-    setPhoneNumber("");
-    setAddress("");
-    setDate("");
+    // if (!user && !user._id) {
+    //   return setStatus({ status: 500, message: "Please login first!" });
+    // } else if (itemsToShow === 0) {
+    //   return setStatus({
+    //     status: 400,
+    //     message: "Please first add food to place order!",
+    //   });
+    // } else if (!address || !phoneNumber || !date) {
+    //   return setStatus({ status: 401, message: "Please fill all the fields!" });
+    // } else if (!validatePhone(phoneNumber)) {
+    //   return setStatus({
+    //     status: 402,
+    //     message: "Phone number should be in 10 digit",
+    //   });
+    // }
+    // else {
+    // console.log("Form submitted", {
+    //   user,
+    //   phoneNumber,
+    //   address,
+    //   date,
+    //   itemsToShow,
+    // });
+    setStatus({ status: "", message: "" });
+    const res = await axios.post("http://localhost:8080/create-food-order", {
+      userId: user._id,
+      address,
+      phoneNumber,
+      orders: itemsToShow,
+      date,
+    });
+    // console.log(res);
+    if (res.status == 200) {
+      setStatus({ status: 200, message: "Order placed successfully!" });
+      setPhoneNumber("");
+      setAddress("");
+      setDate("");
+      setItemsToShow([]);
+      setIsOrderPlaced(() => false);
+      setInterval(() => setStatus({ status: "", message: "" }), 5000);
+    }
+    if (res.status == 500) {
+      setStatus({
+        status: 500,
+        message: "Something went wrong!",
+      });
+    }
+    // }
   };
 
   const triggerFormSubmit = (e) => {
@@ -208,6 +261,16 @@ function Render() {
     setIsModalOpen(itemsToShow.length > 0);
   }, [itemsToShow]);
 
+  // useEffect(() => {
+  //   const fetchUsersFoodOrdersById = async () => {
+  //     const res = await axios.get("http://localhost:8080/user-food-orders", {
+  //       userId: user._id,
+  //     });
+  //     if (res) setResData(res);
+  //   };
+  //   if (!resData) fetchUsersFoodOrdersById();
+  //   console.log(resData);
+  // }, [resData]);
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Canvas>
@@ -223,6 +286,7 @@ function Render() {
               style={{ width: "100vw", height: "100vh", position: "relative" }}
             >
               <Modal
+                status={status}
                 isOpen={isModalOpen}
                 itemsToShow={itemsToShow}
                 onClose={handleClose}
@@ -245,12 +309,28 @@ function Render() {
                         type: "spring",
                       }}
                     >
+                      {status && (
+                        <div className="container">
+                          <label
+                            htmlFor="error"
+                            style={{
+                              color: status.status === 200 ? "green" : "red",
+                            }}
+                          >
+                            {status.message}
+                          </label>
+                        </div>
+                      )}
                       <div className="container">
                         <label htmlFor="phone-number">Phone Number:</label>
                         <input
+                          type="text"
                           value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          type="number"
+                          onChange={(e) =>
+                            setPhoneNumber(
+                              e.target.value.replace(/[^\d]/g, "").slice(0, 10)
+                            )
+                          }
                           className="inputField"
                           name="phone-number"
                         />
@@ -309,6 +389,7 @@ function Render() {
                         clear
                       </h3>
                       <button
+                        type="submit"
                         className={`proceed ${
                           itemsToShow.length > 4 ? "" : "notAllowed"
                         }`}

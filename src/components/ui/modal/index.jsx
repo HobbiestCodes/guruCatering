@@ -6,20 +6,34 @@ const Modal = ({
   isOpen,
   onClose,
   children,
+  status,
   isOrderPlaced,
   setIsOrderPlaced,
   triggerFormSubmit,
   items,
   setItemsToShow,
+  className,
 }) => {
   const modalStyle = {
     height: isOpen ? "auto" : "45px",
   };
 
   return (
-    <div className="modal" style={{ ...modalStyle, zIndex: 999 }}>
+    <div
+      className={`${className ? "className" : ""} modal`}
+      style={{ ...modalStyle, zIndex: 999 }}
+    >
       <div className="top-of-modal" onClick={onClose}>
-        <h3>Your plate</h3>
+        <h3>Your plate </h3>
+        {status.status === 200 && (
+          <span
+            style={{
+              color: status.status === 200 ? "green" : "red",
+            }}
+          >
+            {status.message}
+          </span>
+        )}
         <div className="close-btn">
           <IoIosArrowUp
             height={18}

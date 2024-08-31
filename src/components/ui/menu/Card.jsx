@@ -1,23 +1,32 @@
-import React from 'react'
-import './styles.scss'
+import React from "react";
+import "./styles.scss";
 
-function Card() {
+function Card({ item, handleAddToPlate }) {
+  const { name, description, price, category, img, rating } = item;
+
   return (
     <div className="box">
-    <img src="https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=60" alt="" />
+      <img src={img} alt={name} />
 
-<div className="content">
-    <h1>Title of the food</h1>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-    
-    <div className="more">
-    <p>Price: <span>Rs. 200</span></p>
-    <p>Rating: <span>4</span></p>
+      <div className="content">
+        <h1>{name}</h1>
+        <p>{description}</p>
+
+        <div className="more">
+          <p>
+            Category: <span>{category}</span>
+          </p>
+          <p>
+            Price: <span>Rs. {price}</span>
+          </p>
+          <p>
+            Rating: <span>{rating}</span>
+          </p>
+        </div>
+        <button onClick={() => handleAddToPlate(item)}>Add to plate</button>
+      </div>
     </div>
-    <button>Add to plate</button>
-</div>
-</div>
-  )
+  );
 }
 
-export default Card
+export default Card;
