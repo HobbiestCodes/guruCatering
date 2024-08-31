@@ -116,3 +116,16 @@ const foodOrdersSchema = new mongoose.Schema({
 });
 
 export const foodOrdersModel = mongoose.model("foodOrders", foodOrdersSchema);
+
+const userFoodPlatesSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+  plates: [orderItemSchema],
+});
+
+export const userFoodPlatesModel = mongoose.model(
+  "userFoodPlates",
+  userFoodPlatesSchema
+);

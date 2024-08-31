@@ -1,24 +1,30 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import useAuth from "../../funcs/useAuth";
 import "./styles.scss";
 import { IoMdCheckmark } from "react-icons/io";
+import axios from "axios";
 
 function Selection({ foodItems, itemsToShow, setItemsToShow }) {
   const [categories, setCategories] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
   const intervalRef = useRef(null);
+  const { user } = useAuth();
 
-  const replaceHyphensWithSpaces = (text) => {
-    return text && text.replace(/-/g, " ");
-  };
+  const replaceHyphensWithSpaces = (text) => text?.replace(/-/g, " ");
 
   const getUniqueCategories = (foodItems) => {
-    const categories = foodItems.map((item) => item.category);
-    return setCategories([...new Set(categories)]);
+    const uniqueCategories = [
+      ...new Set(foodItems.map((item) => item.category)),
+    ];
+    setCategories(uniqueCategories);
   };
 
+  // Initialize categories and start category interval
   useEffect(() => {
-    if (categories.length === 0) getUniqueCategories(foodItems);
+    if (categories.length === 0 && foodItems.length > 0) {
+      getUniqueCategories(foodItems);
+    }
   }, [categories, foodItems]);
 
   const startCategoryInterval = () => {
@@ -28,7 +34,7 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
         const nextIndex = (currentIndex + 1) % categories.length;
         return categories[nextIndex];
       });
-    }, 5000); // changing category every 5 seconds
+    }, 5000); // change category every 5 seconds
   };
 
   useEffect(() => {
@@ -36,22 +42,62 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
       setCurrentCategory(categories[0]);
       startCategoryInterval();
 
-      return () => clearInterval(intervalRef.current); // cleaning up interval on component unmount
+      return () => clearInterval(intervalRef.current); // Clean up interval on unmount
     }
   }, [categories]);
 
   const handleMouseEnter = () => {
-    clearInterval(intervalRef.current); // stop changing category on hover
+    clearInterval(intervalRef.current); // Stop changing category on hover
   };
 
   const handleMouseLeave = () => {
-    startCategoryInterval(); // resume changing category when not hovering
+    startCategoryInterval(); // changing category when not hovering
   };
 
-  // filtering food items based on the current category
+  // Filter food items based on the current category
   const filteredItems = foodItems.filter(
     (item) => item.category === currentCategory
   );
+
+  const handleAddToPlate = async (item) => {
+    const updatedItems = [...itemsToShow, { ...item, quantity: 1 }];
+    setItemsToShow(updatedItems);
+
+    if (user && user._id) {
+      try {
+        await axios.post("http://localhost:8080/create-user-food-plates", {
+          userId: user._id,
+          plates: updatedItems,
+        });
+      } catch (error) {
+        console.error("Error adding to plate:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const fetchUsersFoodOrdersById = async () => {
+      if (user && user._id) {
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/read-user-food-plates",
+            {
+              userId: user._id,
+            }
+          );
+          if (res.data && res.data.plates.length > 0) {
+            setItemsToShow(res.data.plates);
+          }
+        } catch (error) {
+          console.error("Error fetching user food orders:", error);
+        }
+      }
+    };
+
+    if (itemsToShow.length === 0) {
+      fetchUsersFoodOrdersById();
+    }
+  }, [itemsToShow, setItemsToShow, user]);
 
   return (
     <div className="selection">
@@ -63,8 +109,6 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
         transition={{ duration: 0.5 }}
         className="title"
       >
-        {/* <h1>{currentCategory}</h1>  */}
-        {/* if screen is freeze then comment the below h1 */}
         <h1>{replaceHyphensWithSpaces(currentCategory)}</h1>
       </motion.div>
       <div className="portions upper">
@@ -81,7 +125,7 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
           >
             {filteredItems.map((item) => (
               <div key={item.id} className="imgContainer">
-                <img src={item.img} alt="icon" />
+                <img src={item.img} alt={item.name} />
                 <div className="popUp">
                   <h1>{item.name}</h1>
                   <p>{item.description}</p>
@@ -89,32 +133,25 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
                   <div className="downContainer">
                     <div
                       className="veg"
-                      style={
-                        item.category === "veg"
-                          ? { borderColor: "limegreen" }
-                          : { borderColor: "brown" }
-                      }
+                      style={{
+                        borderColor:
+                          item.category === "veg" ? "limegreen" : "brown",
+                      }}
                     >
                       <div
                         className="dot"
-                        style={
-                          item.category === "veg"
-                            ? { background: "limegreen" }
-                            : { background: "brown" }
-                        }
+                        style={{
+                          background:
+                            item.category === "veg" ? "limegreen" : "brown",
+                        }}
                       ></div>
                     </div>
                     {!itemsToShow.find((obj) => obj.id === item.id) ? (
                       <div
                         className="addToCart"
-                        onClick={() =>
-                          setItemsToShow((items) => [
-                            ...items,
-                            { ...item, quantity: 1 },
-                          ])
-                        }
+                        onClick={() => handleAddToPlate(item)}
                       >
-                        <p>Add to plate + </p>
+                        <p>Add to plate +</p>
                       </div>
                     ) : (
                       <div className="alreadyToCart">

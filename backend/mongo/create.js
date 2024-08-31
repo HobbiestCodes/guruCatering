@@ -1,4 +1,4 @@
-import foodModel, { foodOrdersModel } from "./schema.js";
+import foodModel, { foodOrdersModel, userFoodPlatesModel } from "./schema.js";
 export async function CreateFood(
   name,
   description,
@@ -74,6 +74,46 @@ export async function createFoodOrders(
     return {
       message: "Something went wrong, please try again!",
       status: 500,
+    };
+  }
+}
+
+export async function createUserFoodPlates(userId, plates) {
+  try {
+    const existingPlate = await userFoodPlatesModel.findOne({ userId });
+
+    if (existingPlate) {
+      plates.forEach((newItem) => {
+        const existingItem = existingPlate.plates.find(
+          (item) => item.id === newItem.id
+        );
+
+        if (existingItem) {
+          existingItem.quantity =
+            (existingItem.quantity || 0) + newItem.quantity;
+        } else {
+          existingPlate.plates.push(newItem);
+        }
+      });
+
+      await existingPlate.save();
+
+      return { status: 200, message: "Plates updated successfully." };
+    } else {
+      const newPlate = new userFoodPlatesModel({
+        userId,
+        plates,
+      });
+      await newPlate.save();
+
+      return { status: 201, message: "Plates created successfully." };
+    }
+  } catch (error) {
+    console.error("Error creating or updating food plates:", error);
+
+    return {
+      status: 500,
+      message: "Internal server error.",
     };
   }
 }

@@ -1,4 +1,4 @@
-import foodModel, { foodOrdersModel } from "./schema.js";
+import foodModel, { foodOrdersModel, userFoodPlatesModel } from "./schema.js";
 import { userModel } from "./schema.js";
 
 export const readFood = async () => {
@@ -32,5 +32,9 @@ export const readOrders = async () => {
 };
 export const readUserOrdersById = async (userId) => {
   const data = await foodOrdersModel.findOne({ userId });
+  return data;
+};
+export const readUserPlatessById = async (userId) => {
+  const data = await userFoodPlatesModel.findOne({ userId });
   return data;
 };

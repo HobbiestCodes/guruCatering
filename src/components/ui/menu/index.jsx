@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./styles.scss";
 import Card from "./Card";
 import Navbar from "../navbar/index";
@@ -20,16 +20,10 @@ function MenuItems() {
   const formRef = useRef(null);
   const { user } = useAuth();
 
-  // console.log(itemsToShow);
   const handleClose = () => setIsModalOpen(!isModalOpen);
-
-  const handleAddToPlate = (item) => {
-    setItemsToShow((prevItems) => [...prevItems, { ...item, quantity: 1 }]);
-  };
 
   const triggerFormSubmit = (e) => {
     e.preventDefault();
-    console.log("Form-Submit-Trigger");
     if (formRef.current) {
       formRef.current.requestSubmit();
     }
@@ -42,63 +36,107 @@ function MenuItems() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (!user && !user._id) {
-    //   return setStatus({ status: 500, message: "Please login first!" });
-    // } else if (itemsToShow === 0) {
-    //   return setStatus({
-    //     status: 400,
-    //     message: "Please first add food to place order!",
-    //   });
-    // } else if (!address || !phoneNumber || !date) {
-    //   return setStatus({ status: 401, message: "Please fill all the fields!" });
-    // } else if (!validatePhone(phoneNumber)) {
-    //   return setStatus({
-    //     status: 402,
-    //     message: "Phone number should be in 10 digit",
-    //   });
-    // }
-    // else {
-    // console.log("Form submitted", {
-    //   user,
-    //   phoneNumber,
-    //   address,
-    //   date,
-    //   itemsToShow,
-    // });
     setStatus({ status: "", message: "" });
-    const res = await axios.post("http://localhost:8080/create-food-order", {
-      userId: user._id,
-      address,
-      phoneNumber,
-      orders: itemsToShow,
-      date,
-    });
-    console.log(res);
-    if (res.status == 200) {
-      setStatus({ status: 200, message: "Order placed successfully!" });
-      setPhoneNumber("");
-      setAddress("");
-      setDate("");
-      setItemsToShow([]);
-      setIsOrderPlaced(() => false);
-      setInterval(() => setStatus({ status: "", message: "" }), 5000);
+
+    if (!user || !user._id) {
+      return setStatus({ status: 500, message: "Please login first!" });
     }
-    if (res.status == 500) {
-      setStatus({
-        status: 500,
-        message: "Something went wrong!",
+    if (itemsToShow.length === 0) {
+      return setStatus({
+        status: 400,
+        message: "Please first add food to place order!",
       });
     }
-    // }
+    if (!address || !phoneNumber || !date) {
+      return setStatus({ status: 401, message: "Please fill all the fields!" });
+    }
+    if (!validatePhone(phoneNumber)) {
+      return setStatus({
+        status: 402,
+        message: "Phone number should be in 10 digits",
+      });
+    }
+
+    try {
+      const res = await axios.post("http://localhost:8080/create-food-order", {
+        userId: user._id,
+        address,
+        phoneNumber,
+        orders: itemsToShow,
+        date,
+      });
+
+      if (res.status === 200) {
+        setStatus({ status: 200, message: "Order placed successfully!" });
+        setPhoneNumber("");
+        setAddress("");
+        setDate("");
+        setItemsToShow([]);
+        setIsOrderPlaced(false);
+        setTimeout(() => setStatus({ status: "", message: "" }), 5000);
+      } else if (res.status === 500) {
+        setStatus({ status: 500, message: "Something went wrong!" });
+      }
+    } catch (error) {
+      setStatus({ status: 500, message: "Something went wrong!" });
+    }
   };
+
+  const handleAddToPlate = async (item) => {
+    setItemsToShow((prevItems) => {
+      const updatedItems = [...prevItems, { ...item, quantity: 1 }];
+
+      if (user && user._id) {
+        axios.post("http://localhost:8080/create-user-food-plates", {
+          userId: user._id,
+          plates: updatedItems,
+        });
+      }
+
+      return updatedItems;
+    });
+  };
+
+  const handleClear = async () => {
+    if (user && user._id) {
+      await axios.post("http://localhost:8080/remove-user-food-plates", {
+        userId: user._id,
+      });
+    }
+    setItemsToShow([]);
+    setIsOrderPlaced(false);
+  };
+
   useEffect(() => {
     // Open the modal when itemsToShow is updated
     setIsModalOpen(itemsToShow.length > 0);
   }, [itemsToShow]);
 
+  useEffect(() => {
+    const fetchUsersFoodOrdersById = async () => {
+      if (user && user._id) {
+        try {
+          const res = await axios.post(
+            "http://localhost:8080/read-user-food-plates",
+            {
+              userId: user._id,
+            }
+          );
+
+          if (res && res.data.plates.length > 0) {
+            setItemsToShow(res.data.plates);
+          }
+        } catch (error) {
+          console.error("Error fetching user food orders:", error);
+        }
+      }
+    };
+
+    if (itemsToShow.length === 0) fetchUsersFoodOrdersById();
+  }, [itemsToShow.length, user]);
+
   return (
     <>
-      {/* <div className="container"> */}
       <Modal
         status={status}
         isOpen={isModalOpen}
@@ -118,18 +156,13 @@ function MenuItems() {
               onSubmit={handleSubmit}
               initial={{ x: -500, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{
-                duration: 1.2,
-                type: "spring",
-              }}
+              transition={{ duration: 1.2, type: "spring" }}
             >
-              {status && (
+              {status.message && (
                 <div className="container">
                   <label
                     htmlFor="error"
-                    style={{
-                      color: status.status === 200 ? "green" : "red",
-                    }}
+                    style={{ color: status.status === 200 ? "green" : "red" }}
                   >
                     {status.message}
                   </label>
@@ -160,7 +193,7 @@ function MenuItems() {
                 />
               </div>
               <div className="container">
-                <label htmlFor="Date">Date</label>
+                <label htmlFor="date">Date:</label>
                 <input
                   type="date"
                   value={date}
@@ -176,10 +209,7 @@ function MenuItems() {
               initial={{ x: 500, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 500, opacity: 0 }}
-              transition={{
-                duration: 1.2,
-                type: "spring",
-              }}
+              transition={{ duration: 1.2, type: "spring" }}
             >
               {itemsToShow.length > 0 &&
                 itemsToShow.map((item) => (
@@ -191,16 +221,10 @@ function MenuItems() {
                 ))}
             </motion.div>
           )}
-          {itemsToShow.length > 0 ? (
+          {itemsToShow.length > 0 && (
             <div className="top-of-modal down">
-              <h3
-                className="clear"
-                onClick={() => {
-                  setItemsToShow([]);
-                  setIsOrderPlaced(() => false);
-                }}
-              >
-                clear
+              <h3 className="clear" onClick={handleClear}>
+                Clear
               </h3>
               <button
                 type="submit"
@@ -212,18 +236,19 @@ function MenuItems() {
                     isOrderPlaced && itemsToShow.length > 4 ? "#54d661" : "",
                 }}
                 onClick={(e) => {
-                  setIsOrderPlaced(() => true);
-                  address && phoneNumber && date && triggerFormSubmit(e);
+                  setIsOrderPlaced(true);
+                  if (address && phoneNumber && date) {
+                    triggerFormSubmit(e);
+                  }
                 }}
               >
                 Place order <IoIosArrowRoundForward size={30} />
                 <div className="tolTip">Minimum order is 5</div>
               </button>
             </div>
-          ) : null}
+          )}
         </AnimatePresence>
       </Modal>
-      {/* </div> */}
       <div className="parent">
         <div className="upper">
           <Navbar />

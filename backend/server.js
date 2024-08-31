@@ -12,11 +12,16 @@ import {
   readFood,
   readOrders,
   readUserOrdersById,
+  readUserPlatessById,
   readUsers,
 } from "./mongo/read.js";
-import { CreateFood, createFoodOrders } from "./mongo/create.js";
-import { deleteData } from "./mongo/delete.js";
-import { updateFood, updateUser } from "./mongo/update.js";
+import {
+  CreateFood,
+  createFoodOrders,
+  createUserFoodPlates,
+} from "./mongo/create.js";
+import { deleteData, removeUserFoodPlate } from "./mongo/delete.js";
+import { updateFood, updateUser, updateUserFoodPlate } from "./mongo/update.js";
 
 dotenv.config();
 
@@ -106,8 +111,8 @@ app.get("/api/logout", (req, res) => {
 });
 
 app.get("/api/current_user", (req, res) => {
-  console.log("Session ID:", req.sessionID);
-  console.log("Session Data:", req.session);
+  // console.log("Session ID:", req.sessionID);
+  // console.log("Session Data:", req.session);
 
   if (req.isAuthenticated()) {
     res.json({ user: req.user });
@@ -176,6 +181,121 @@ app.post("/createFood", async (req, res) => {
   });
 });
 
+app.post("/create-user-food-plates", async (req, res) => {
+  const { userId, plates } = req.body;
+  // console.log(userId, plates);
+
+  try {
+    if (!userId || !Array.isArray(plates)) {
+      return res.status(400).send({
+        message: "Invalid request data",
+      });
+    }
+
+    const result = await createUserFoodPlates(userId, plates);
+    // console.log(result);
+
+    if (result.status == 200) {
+      res.status(200).send({
+        message: result.message,
+      });
+    }
+    if (result.status == 201) {
+      res.status(200).send({
+        message: result.message,
+      });
+    }
+    if (result.status == 500) {
+      res.status(500).send({
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "Failed to add food platess",
+      error: error.message,
+    });
+  }
+});
+app.post("/read-user-food-plates", async (req, res) => {
+  const { userId } = req.body;
+  // console.log("user-food-orders", userId);
+
+  const food = await readUserPlatessById(userId);
+
+  res.send(food);
+});
+app.post("/remove-user-food-plates", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    if (!userId) {
+      return res.status(400).send({
+        message: "Invalid request data",
+      });
+    }
+
+    const result = await removeUserFoodPlate(userId);
+
+    if (result.status === 200) {
+      res.status(200).send({
+        message: "Food plates removed successfully",
+      });
+    } else if (result.status === 404) {
+      res.status(404).send({
+        message: "Food plates not found",
+      });
+    } else {
+      res.status(500).send({
+        message: "Failed to remove food plate",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: "Failed to remove food plate",
+      error: error.message,
+    });
+  }
+});
+
+app.post("/update-user-food-plates", async (req, res) => {
+  const { userId, plateId, action } = req.body;
+
+  if (!userId || !plateId || !action) {
+    return res.status(400).send({
+      message:
+        "Invalid request data. User ID, plate ID, and action are required.",
+    });
+  }
+
+  try {
+    const result = await updateUserFoodPlate(userId, plateId, action);
+
+    res.status(result.status).send({
+      message: result.message || "Food plate updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Failed to update food plate",
+      error: error.message,
+    });
+  }
+});
+
+app.post("/read-user-food-plates", async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const food = await readUserPlatessById(userId);
+    res.send(food);
+  } catch (error) {
+    res.status(500).send({
+      message: "Failed to read user food plates",
+      error: error.message,
+    });
+  }
+});
+
 app.post("/create-food-order", async (req, res) => {
   const { userId, address, phoneNumber, orders, date } = req.body;
   // console.log(userId, address, phoneNumber, orders, date);
@@ -200,12 +320,13 @@ app.post("/create-food-order", async (req, res) => {
       orders,
       date
     );
-    console.log(result);
+    // console.log(result);
 
     if (result.status == 200) {
       res.status(200).send({
         message: result.message,
       });
+      await removeUserFoodPlate(userId);
     }
     if (result.status == 201) {
       res.status(200).send({
@@ -225,14 +346,14 @@ app.post("/create-food-order", async (req, res) => {
   }
 });
 
-// app.get("/user-food-orders", async (req, res) => {
-//   const { userId } = req.body;
-//   console.log("user-food-orders", userId);
+app.post("/user-food-orders", async (req, res) => {
+  const { userId } = req.body;
+  console.log("user-food-orders", userId);
 
-//   const food = await readUserOrdersById(userId);
+  const food = await readUserOrdersById(userId);
 
-//   res.send(food);
-// });
+  res.send(food);
+});
 
 app.get("/Orders", async (req, res) => {
   const orders = await readOrders();
