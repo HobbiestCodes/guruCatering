@@ -15,7 +15,7 @@ function Cards({ item, setItemsToShow }) {
   const handleDecrement = () => {
     setItemsToShow((prevItems) =>
       prevItems.map((prevItem) =>
-        prevItem.id === item.id && prevItem.quantity > 0
+        prevItem.id === item.id && prevItem.quantity > 1
           ? { ...prevItem, quantity: prevItem.quantity - 1 }
           : prevItem
       )

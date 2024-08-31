@@ -1,45 +1,44 @@
 .img {
-    position: absolute;
-    width: 6rem;
-    height: 6rem;
-    z-index: 12;
-
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  //   z-index: 12;
 }
 
 .food1 {
-    top:58%;
-    left: 27%;
+  top: 58%;
+  left: 27%;
 }
 .food2 {
-    top: 58%;
-    left: 40%;
+  top: 58%;
+  left: 40%;
 }
 
 .food3 {
-    top: 58%;
-    left: 53.5%;
+  top: 58%;
+  left: 53.5%;
 }
 
 .food4 {
-    top: 58%;
-    left: 67%;
+  top: 58%;
+  left: 67%;
 }
 
 .login {
-    width: 2.3rem;
-    height: 2.3rem;
+  width: 2.3rem;
+  height: 2.3rem;
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 button {
-    transition: 0.3s all ease;
+  transition: 0.3s all ease;
 
-    &:hover {
-        transform: scale(0.8);
-    }
+  &:hover {
+    transform: scale(0.8);
+  }
 }
