@@ -1,7 +1,6 @@
-import React from 'react'
-import './styles.scss';
-import Card from './Card';
 import Navbar from '../navbar/index';
+import Card from './Card';
+import './styles.scss';
 
 function MenuItems() {
   return (
