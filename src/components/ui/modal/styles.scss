@@ -14,27 +14,43 @@
   overflow-y: scroll;
   overflow-x: hidden;
   scrollbar-width: none;
-
   transition: 0.3s min-height ease-in-out;
+
+  @include media(tablet, mobile) {
+    width: 300px;
+  }
+
   .top-of-modal {
     @include flex($jc: space-between, $al: center);
     width: 100%;
     padding: 10px 15px 10px 10px;
     position: sticky;
+    cursor: pointer;
     top: 0;
     background-color: #fff;
+    @include media(tablet, mobile) {
+      font-size: $sm;
+      padding: 12px 10px 12px 10px;
+    }
+
     h3 {
       color: grey;
       font-weight: 400;
       font-size: $md;
+
+      @include media(tablet, mobile) {
+        font-size: $sm;
+      }
     }
 
     &.down {
       bottom: 0;
     }
+
     .close-btn {
       cursor: pointer;
     }
+
     .clear {
       cursor: pointer;
       padding: 0px 0px 0px 10px;
@@ -55,9 +71,14 @@
       outline: none;
       @include flex();
       gap: 0.3rem;
+
+      @include media(tablet, mobile) {
+        font-size: 14px;
+      }
       .tolTip {
         display: none;
       }
+
       &.notAllowed {
         cursor: not-allowed;
         opacity: 0.5;
@@ -76,6 +97,7 @@
           transition: 0.2s all ease;
           color: $white;
         }
+
         &:hover {
           transform: scale(1);
           .tolTip {
@@ -128,9 +150,19 @@
       padding-left: 15px;
       padding-right: 15px;
 
+      @include media(tablet, mobile) {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
       img {
         height: 60px;
         width: 60px;
+
+        @include media(tablet, mobile) {
+          height: 40px;
+          width: 40px;
+        }
       }
 
       .modal-item-texts {
@@ -143,6 +175,13 @@
         padding-left: 10px;
         padding-right: 20px;
 
+        @include media(tablet, mobile) {
+          font-size: $sm;
+          padding-top: 2px;
+          padding-left: 6px;
+          padding-right: 10px;
+        }
+
         .modal-item-quantity {
           font-size: 12px;
           user-select: none;
@@ -154,6 +193,10 @@
         @include flex($jc: flex-start, $al: flex-start);
         width: 20%;
         gap: 12px;
+
+        @include media(tablet, mobile) {
+          gap: 8px;
+        }
       }
 
       .modal-item-btn {

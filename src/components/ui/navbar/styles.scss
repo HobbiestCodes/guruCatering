@@ -1,77 +1,109 @@
 @import "./../../sass/global";
 
 .navbar {
-    width: 100%;
-    height: auto;
-    // background-color: rebeccapurple;
-    @include flex(space-between, center, row);
+  width: 100%;
+  height: auto;
+  // background-color: rebeccapurple;
+  @include flex(space-between, center, row);
+  position: relative;
+  z-index: 9;
+  padding: 8px 5% 8px 4%;
+  background-color: white;
+  backdrop-filter: blur(4px);
+  .nav_logo {
+    width: 10%;
+    height: 3rem;
+    img {
+      width: 95%;
+      height: 95%;
+      object-fit: contain;
+    }
+  }
+
+  .tabs {
+    @include media(tablet, mobile) {
+      display: none;
+    }
+  }
+
+  .responsive-nav {
+    z-index: 103;
+    position: fixed;
+    width: 300px;
+    background-color: #fff;
+    @include flex(center, center, column);
+    gap: 6vh;
+    list-style: none;
+    font-family: 700;
+    font-size: larger;
+    height: 100vh;
+    right: 0;
+    top: 0;
+    // bottom: 0;
+  }
+
+  .nav-menu-icon {
+    display: none;
     position: relative;
-    z-index: 9;
-    padding: 8px 5% 8px 4%;
-    background-color: white;
-    backdrop-filter: blur(4px);
-    .nav_logo {
-        width: 10%;
-        height: 3rem;
-        img {
-            width: 95%;
-            height: 95%;
-            object-fit: contain;
+    cursor: pointer;
+    z-index: 103;
+
+    @include media(tablet, mobile) {
+      display: inline-block;
+    }
+  }
+
+  ul {
+    @include flex(flex-start);
+    list-style: none;
+    gap: 1.3rem;
+    a {
+      text-decoration: none;
+    }
+    li {
+      font-size: 1.3rem;
+      cursor: pointer;
+      position: relative;
+      color: black;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        width: 0%;
+        height: 100%;
+        z-index: -1;
+        border-bottom: 2px solid $primary;
+        transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+      &.unselected {
+        color: black;
+        &::before {
+          width: 0%;
         }
-    }  
-        ul {
-            @include flex(flex-start);
-            list-style: none;
-            gap: 1.3rem;
-            a {
-                text-decoration: none;
-            }
-            li {
-                font-size: 1.3rem;
-                cursor: pointer;
-                position: relative;
-                color: black;
-
-                &::before {
-                    content: '';
-                    position: absolute;
-                    inset: 0;
-                    width: 0%;
-                    height: 100%;
-                    z-index: -1;
-                    border-bottom: 2px solid $primary;
-                    transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                }
-                &.unselected {
-                color: black;
-                &::before {
-                    width: 0%;
-                }
-                }
-                &.active {
-                    color: $primary;
-                    &::before {
-                        width: 100%;
-                    }
-                }
-                &:hover {
-                    color: $primary;
-                    &::before {
-                        width: 100%;
-                    }
-                }
-                &.login {
-                    width: 6rem;
-                    &:hover {
-                        // transform: scale(0.8);
-                        &::before {
-                        width: 0;
-
-                    }
-                    }
-                }
-            }
-
+      }
+      &.active {
+        color: $primary;
+        &::before {
+          width: 100%;
         }
-    // }
+      }
+      &:hover {
+        color: $primary;
+        &::before {
+          width: 100%;
+        }
+      }
+      &.login {
+        width: 6rem;
+        &:hover {
+          // transform: scale(0.8);
+          &::before {
+            width: 0;
+          }
+        }
+      }
+    }
+  }
+  // }
 }
