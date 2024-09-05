@@ -1,4 +1,4 @@
-import foodModel, { userFoodPlatesModel, userModel } from "./schema.js";
+import foodModel, { userModel } from "./schema.js";
 
 export const updateFood = (
   id,

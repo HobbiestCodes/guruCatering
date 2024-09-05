@@ -32,7 +32,7 @@
     width: 300px;
     background-color: #fff;
     @include flex(center, center, column);
-    gap: 6vh;
+    gap: 3vh;
     list-style: none;
     font-family: 700;
     font-size: larger;
@@ -96,6 +96,7 @@
       }
       &.login {
         width: 6rem;
+        border-radius: 100px;
         &:hover {
           // transform: scale(0.8);
           &::before {

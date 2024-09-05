@@ -13,6 +13,8 @@ import {
 import Dashboard from './components/ui/admin/index.jsx';
 import Update from './routers/Update.jsx';
 import Menu from './routers/Menu.jsx';
+import { ArrayProvider } from './components/funcs/context.jsx';
+import Items from './routers/Items.jsx';
 
 
 const ReactRouter = () => {
@@ -33,8 +35,13 @@ const ReactRouter = () => {
       errorElement: <ErrorPage />,
     },
     {
-      path: '/Menu',
+      path: '/menu/:category',
       element: <Menu />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: '/dashboard/items',
+      element: <Items />,
       errorElement: <ErrorPage />,
     }
 
@@ -43,6 +50,8 @@ const ReactRouter = () => {
 }
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ArrayProvider>
     <ReactRouter />
+    </ArrayProvider>
   </StrictMode>,
 )

@@ -12,16 +12,20 @@ import {
   readFood,
   readOrders,
   readUserOrdersById,
-  readUserPlatessById,
   readUsers,
+  readCatogery,
+  readAllFoods,
 } from "./mongo/read.js";
 import {
   CreateFood,
   createFoodOrders,
-  createUserFoodPlates,
+  Catogery,
+  createOrders
 } from "./mongo/create.js";
+
 import { deleteData, removeUserFoodPlate } from "./mongo/delete.js";
-import { updateFood, updateUser, updateUserFoodPlate } from "./mongo/update.js";
+import { updateFood, updateUser } from "./mongo/update.js";
+import foodModel from "./mongo/schema.js";
 
 dotenv.config();
 
@@ -40,7 +44,7 @@ const connection = () => {
       console.log(e);
     });
   app.listen(port, () => {
-    console.log(`\nApp listening on port ${port}`);
+    console.log(`App listening on port ${port}`);
   });
 };
 
@@ -83,43 +87,55 @@ app.use(passport.session());
 app.get("/", (req, res) => {
   res.redirect("http://localhost:5173");
 });
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("/"); // Redirect to the dashboard or another page
-  }
-);
+// app.get(
+//   "/auth/google",
+//   passport.authenticate("google", { scope: ["profile", "email"] })
+// );
+// app.get(
+//   "/auth/google/callback",
+//   passport.authenticate("google", { failureRedirect: "/" }),
+//   (req, res) => {
+//     res.redirect("/"); // Redirect to the dashboard or another page
+//   }
+// );
 // Logout Route
-app.get("/api/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).send("Error logging out");
-    }
-    req.session.destroy(req.sessionID, (err) => {
-      if (err) {
-        return res.status(500).send("Error destroying session");
-      }
-      res.clearCookie("connection.sid");
-      res.send("Logged out");
-    });
-  });
-});
+// app.get("/api/logout", (req, res) => {
+//   req.logout((err) => {
+//     if (err) {
+//       return res.status(500).send("Error logging out");
+//     }
+//     req.session.destroy(req.sessionID, (err) => {
+//       if (err) {
+//         return res.status(500).send("Error destroying session");
+//       }
+//       res.clearCookie("connection.sid");
+//       res.send("Logged out");
+//     });
+//   });
+// });
 
-app.get("/api/current_user", (req, res) => {
-  // console.log("Session ID:", req.sessionID);
-  // console.log("Session Data:", req.session);
+// app.get("/api/current_user", (req, res) => {
+//   // console.log("Session ID:", req.sessionID);
+//   // console.log("Session Data:", req.session);
 
-  if (req.isAuthenticated()) {
-    res.json({ user: req.user });
-  } else {
-    res.json({ user: null });
-  }
-});
+//   if (req.isAuthenticated()) {
+//     res.json({ user: req.user });
+//   } else {
+//     res.json({ user: null });
+//   }
+// });
+app.get('/catogery', async (req, res) => {
+  const response = await readCatogery();
+  res.send(response);
+})
+
+app.post('/catogery/create', async (req, res) => {
+  const data = req.body;
+  const lowerCase = data.name.toLowerCase();
+  const response = await Catogery(lowerCase);
+  res.send(response);
+  
+})
 
 app.put("/update", async (req, res) => {
   const { id, name, description, price, image, rating, isVeg } = req.body;
@@ -149,7 +165,13 @@ app.get("/Admins", async (req, res) => {
 });
 
 app.get("/Foods", async (req, res) => {
-  const food = await readFood();
+  const food = await readAllFoods();
+  res.send(food);
+});
+
+app.get("/Foods/:catogery", async (req, res) => {
+  const { catogery } = req.params;
+  const food = await readFood(catogery);
   res.send(food);
 });
 
@@ -181,120 +203,18 @@ app.post("/createFood", async (req, res) => {
   });
 });
 
-app.post("/create-user-food-plates", async (req, res) => {
-  const { userId, plates } = req.body;
-  // console.log(userId, plates);
+app.post('/plate', async (req, res) => {
+  const data = req.body;
+ const response = await foodModel.find({_id: {$in: data}})
+ res.send(response);
+})
 
-  try {
-    if (!userId || !Array.isArray(plates)) {
-      return res.status(400).send({
-        message: "Invalid request data",
-      });
-    }
 
-    const result = await createUserFoodPlates(userId, plates);
-    // console.log(result);
-
-    if (result.status == 200) {
-      res.status(200).send({
-        message: result.message,
-      });
-    }
-    if (result.status == 201) {
-      res.status(200).send({
-        message: result.message,
-      });
-    }
-    if (result.status == 500) {
-      res.status(500).send({
-        message: result.message,
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Failed to add food platess",
-      error: error.message,
-    });
-  }
-});
-app.post("/read-user-food-plates", async (req, res) => {
-  const { userId } = req.body;
-  // console.log("user-food-orders", userId);
-
-  const food = await readUserPlatessById(userId);
-
-  res.send(food);
-});
-app.post("/remove-user-food-plates", async (req, res) => {
-  const { userId } = req.body;
-
-  try {
-    if (!userId) {
-      return res.status(400).send({
-        message: "Invalid request data",
-      });
-    }
-
-    const result = await removeUserFoodPlate(userId);
-
-    if (result.status === 200) {
-      res.status(200).send({
-        message: "Food plates removed successfully",
-      });
-    } else if (result.status === 404) {
-      res.status(404).send({
-        message: "Food plates not found",
-      });
-    } else {
-      res.status(500).send({
-        message: "Failed to remove food plate",
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Failed to remove food plate",
-      error: error.message,
-    });
-  }
-});
-
-app.post("/update-user-food-plates", async (req, res) => {
-  const { userId, plateId, action } = req.body;
-
-  if (!userId || !plateId || !action) {
-    return res.status(400).send({
-      message:
-        "Invalid request data. User ID, plate ID, and action are required.",
-    });
-  }
-
-  try {
-    const result = await updateUserFoodPlate(userId, plateId, action);
-
-    res.status(result.status).send({
-      message: result.message || "Food plate updated successfully",
-    });
-  } catch (error) {
-    res.status(500).send({
-      message: "Failed to update food plate",
-      error: error.message,
-    });
-  }
-});
-
-app.post("/read-user-food-plates", async (req, res) => {
-  const { userId } = req.body;
-
-  try {
-    const food = await readUserPlatessById(userId);
-    res.send(food);
-  } catch (error) {
-    res.status(500).send({
-      message: "Failed to read user food plates",
-      error: error.message,
-    });
-  }
-});
+app.post('/addOrder', async (req, res) => {
+  const {name, email, phone, address, date, note, items} = req.body;
+ await createOrders(name, email, phone, address, date, note, items);
+  res.send({message: "Added successfully...!"})
+})
 
 app.post("/create-food-order", async (req, res) => {
   const { userId, address, phoneNumber, orders, date } = req.body;

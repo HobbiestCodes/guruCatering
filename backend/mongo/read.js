@@ -1,10 +1,15 @@
-import foodModel, { foodOrdersModel, userFoodPlatesModel } from "./schema.js";
-import { userModel } from "./schema.js";
+import foodModel, { foodOrdersModel, orderModel } from "./schema.js";
+import { userModel, catogeryModel } from "./schema.js";
 
-export const readFood = async () => {
-  const data = await foodModel.find();
+export const readFood = async (catogery) => {
+  const data = await foodModel.find({catogery: catogery});
   return data;
 };
+
+export const readAllFoods = async () => {
+  const data = await foodModel.find();
+  return data;
+}
 export const readById = async (endpoint, id) => {
   if (endpoint === "Foods") {
     const data = await foodModel.findById(id);
@@ -27,14 +32,16 @@ export const readAdmins = async () => {
 };
 
 export const readOrders = async () => {
-  const data = await foodOrdersModel.find();
+  const data = await orderModel.find();
   return data;
 };
 export const readUserOrdersById = async (userId) => {
   const data = await foodOrdersModel.findOne({ userId });
   return data;
 };
-export const readUserPlatessById = async (userId) => {
-  const data = await userFoodPlatesModel.findOne({ userId });
+
+
+export const readCatogery = async () => {
+  const data = await catogeryModel.find()
   return data;
-};
+}

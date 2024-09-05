@@ -117,15 +117,50 @@ const foodOrdersSchema = new mongoose.Schema({
 
 export const foodOrdersModel = mongoose.model("foodOrders", foodOrdersSchema);
 
-const userFoodPlatesSchema = new mongoose.Schema({
-  userId: {
+const Orders = new mongoose.Schema({
+  name: {
     type: String,
     required: true,
   },
-  plates: [orderItemSchema],
-});
+  email: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    required: true,
+  },
+  note: {
+    type: String,
+    required: false,
+  },
+  items: {
+    type: [],
+    required: true,
+  },
+})
 
-export const userFoodPlatesModel = mongoose.model(
-  "userFoodPlates",
-  userFoodPlatesSchema
-);
+export const orderModel = mongoose.model("orders", Orders);
+
+
+
+const catogerySchema = new mongoose.Schema({
+  image: {
+      type: String,
+      required: false,
+  },
+  name: {
+      type: String,
+      required: true
+  }
+})
+
+export const catogeryModel = mongoose.model('catogery', catogerySchema);

@@ -9,9 +9,7 @@ function App() {
     <>
     <Suspense fallback={<Tea />}>
       <Render />
-      {/* <Tea /> */}
     </Suspense>
-     {/* <Loader /> */}
     </>
   )
 }
