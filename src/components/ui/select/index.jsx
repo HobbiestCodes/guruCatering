@@ -9,24 +9,25 @@ import { Link } from "react-router-dom";
 function Selection({ foodItems, itemsToShow, setItemsToShow }) {
   const [categories, setCategories] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
-  const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+  const dummy = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ];
 
   const getCatogeries = async () => {
     try {
       const res = await axios.get("http://localhost:8080/catogery");
       if (res.status !== 200) {
-        console.log('something went wrong...');
+        console.log("something went wrong...");
       }
       setCategories(res.data);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     getCatogeries();
-  }, [])
+  }, []);
 
   // const getUniqueCategories = (foodItems) => {
   //   const uniqueCategories = [
@@ -128,30 +129,31 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
       </motion.div> */}
       <div className="portions upper">
         {/* <AnimatePresence mode="wait"> */}
-          <div
-            // initial={{ opacity: 0 }}
-            // animate={{ opacity: 1 }}
-            // exit={{ opacity: 0 }}
-            // transition={{ duration: 0.5 }}
-            className="box"
-          >
-            {
-              categories.map((items) => (
-          // <div className="container">
-          <Link to={`/menu/${items.name}`}>
-            <div className="imgContainer">
-              <img src="https://picsum.photos/1080/1920?random=1" alt="catogeryPic" />
-              {/* <h3>Title for catogery</h3> */}
-              <div className="popUp">
-              <h1>{items.name}</h1>
+        <div
+          // initial={{ opacity: 0 }}
+          // animate={{ opacity: 1 }}
+          // exit={{ opacity: 0 }}
+          // transition={{ duration: 0.5 }}
+          className="box"
+        >
+          {categories.map((item) => (
+            // <div className="container">
+            <Link key={item.name} to={`/menu/${item.name}`}>
+              <div className="imgContainer">
+                <img
+                  src="https://picsum.photos/1080/1920?random=1"
+                  alt="catogeryPic"
+                />
+                {/* <h3>Title for catogery</h3> */}
+                <div className="popUp">
+                  <h1>{item.name}</h1>
+                </div>
               </div>
-          </div>
-          </Link>
-            // </div> 
-              ))
-            }
-            {/* {filteredItems.map((item) => ( */}
-              {/* <div key={item.id} className="imgContainer">
+            </Link>
+            // </div>
+          ))}
+          {/* {filteredItems.map((item) => ( */}
+          {/* <div key={item.id} className="imgContainer">
                 <img src={item.img} alt={item.name} />
                 <div className="popUp">
                   <p>{item.description}</p>
@@ -189,9 +191,8 @@ function Selection({ foodItems, itemsToShow, setItemsToShow }) {
                   </div>
                 </div>
               </div> */}
-            {/* ))} */}
-
-          </div>
+          {/* ))} */}
+        </div>
         {/* </AnimatePresence> */}
       </div>
     </div>
