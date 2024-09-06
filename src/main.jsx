@@ -31,6 +31,11 @@ const ReactRouter = () => {
       errorElement: <ErrorPage />,
     },
     {
+      path: "/menu",
+      element: <Menu />,
+      errorElement: <ErrorPage />,
+    },
+    {
       path: "/menu/:category",
       element: <Menu />,
       errorElement: <ErrorPage />,

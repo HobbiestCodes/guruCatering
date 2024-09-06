@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect, useContext, createContext } from "react";
 
 const ArrayContext = createContext();
 
@@ -6,28 +6,47 @@ export const useArray = () => useContext(ArrayContext);
 
 export const ArrayProvider = ({ children }) => {
   const [myArray, setMyArray] = useState([]);
+  console.log(myArray);
+  
 
   useEffect(() => {
-    // Load array from localStorage if it exists
-    const savedArray = JSON.parse(localStorage.getItem('myArray')) || [];
+    const savedArray = JSON.parse(localStorage.getItem("myArray")) || [];
     setMyArray(savedArray);
   }, []);
 
   useEffect(() => {
-    // Save array to localStorage whenever it changes
-    localStorage.setItem('myArray', JSON.stringify(myArray));
+    localStorage.setItem("myArray", JSON.stringify(myArray));
   }, [myArray]);
 
   const addToArray = (newItem) => {
-    setMyArray((prevArray) => [...prevArray, newItem]);
+    setMyArray((prevArray) => {
+      const index = prevArray.findIndex((item) => item.id === newItem.id);
+      if (index > -1) {
+        const updatedArray = [...prevArray];
+        updatedArray[index] = {
+          ...updatedArray[index],
+          quantity: newItem.quantity,
+        };
+        return updatedArray;
+      }
+      return [...prevArray, newItem];
+    });
   };
 
-  const isInArray = (item) => {
-    return myArray.includes(item)  // Assuming items have unique IDs
+  const removeFromArray = (id) => {
+    setMyArray((prevArray) => {
+      return prevArray.filter((item) => item.id !== id);
+    });
+  };
+
+  const isInArray = (id) => {
+    return myArray.some((item) => item.id === id);
   };
 
   return (
-    <ArrayContext.Provider value={{ myArray, addToArray, isInArray }}>
+    <ArrayContext.Provider
+      value={{ myArray, addToArray, removeFromArray, isInArray }}
+    >
       {children}
     </ArrayContext.Provider>
   );
