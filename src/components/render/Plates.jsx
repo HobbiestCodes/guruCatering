@@ -1,7 +1,7 @@
 import React from "react";
 import food1 from "/assets/food 1.png";
-import food2 from "/assets/food 2.png";
-import food3 from "/assets/food 3.png";
+import food2 from "/assets/food 8.png";
+import food3 from "/assets/food 5.png";
 import food4 from "/assets/food 4.png";
 import { motion } from "framer-motion";
 
@@ -30,7 +30,7 @@ function Plates() {
           delay: 1.7,
         }}
         viewport={{ once: false }}
-        src={food1}
+        src={food2}
         alt=""
         className="img food2"
       />
@@ -42,7 +42,7 @@ function Plates() {
           delay: 1.8,
         }}
         viewport={{ once: false }}
-        src={food1}
+        src={food3}
         alt=""
         className="img food3"
       />
@@ -54,7 +54,7 @@ function Plates() {
           delay: 1.9,
         }}
         viewport={{ once: false }}
-        src={food1}
+        src={food4}
         alt=""
         className="img food4"
       />

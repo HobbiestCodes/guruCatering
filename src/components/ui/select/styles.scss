@@ -7,6 +7,7 @@
 
   .title {
     position: absolute;
+    text-transform: capitalize;
     top: 20%;
     left: 2%;
     h1 {
@@ -28,38 +29,33 @@
     width: 100%;
     height: 50%;
     padding: 10px 3%;
-    // background-color: blue;
+
     .box {
       width: 100%;
-      height: 90%;
-      @include flex(flex-start, flex-start);
-      padding: 1.5% 10%;
-      gap: 1rem;
-      row-gap: 0;
-      // background-color: red;
-
+      height: 100%;
+      @include flex(flex-start, center);
+      padding: 1.5% 6%;
+      gap: 2rem;
+      row-gap: 0rem;
       .imgContainer {
         width: 6rem;
         height: 6rem;
-        // background-color: black;
+        background-color: black;
         @include flex(flex-start, flex-start, column);
         border-radius: 100%;
         position: relative;
         cursor: pointer;
-        transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transition: 0.3s all ease;
+
         &:hover {
-          transform: scale(1.2);
           .popUp {
-            opacity: 1;
             transform: scale(1);
           }
         }
-
         @include media(tablet, mobile) {
           width: 5rem;
           height: 5rem;
         }
-
         img {
           width: 100%;
           height: 100%;
@@ -69,113 +65,25 @@
 
         .popUp {
           position: absolute;
-          inset: 0;
-          top: -150%;
-          left: -70%;
-          background: #ffffff;
-          width: 14rem;
-          height: 9rem;
-          border-radius: 10px;
-          box-shadow: 0px 0px 8px #11111110;
-          opacity: 0;
+          z-index: 2;
+          @include flex();
+          width: 10rem;
+          height: 3.5rem;
+          background-color: rgba($color: #ffffff, $alpha: 0.6);
+          backdrop-filter: blur(3px);
+          top: -60%;
+          left: -30%;
           transform: scale(0);
-          transition: 0.4s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
-          padding: 10px;
-          z-index: 90;
-
-          @include media(tablet, mobile) {
-            top: -140%;
-            width: 12rem;
-            height: 7rem;
-          }
-
+          border-radius: 10px;
+          transition: 0.2s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
           h1 {
-            font-size: 1.2rem;
+            // font-family: var();
             font-weight: 600;
-
-            @include media(tablet, mobile) {
-              font-size: 1rem;
-            }
-          }
-          p {
-            font-weight: 300;
-            color: grey;
-            font-size: 12px;
-
-            @include media(tablet, mobile) {
-              font-size: 10px;
-            }
-          }
-          h2 {
-            margin-top: 3%;
-            font-size: 1.1rem;
-            color: #353535;
-
-            @include media(tablet, mobile) {
-              margin-top: 0%;
-              font-size: 1rem;
-            }
-          }
-          .downContainer {
-            @include flex(space-between, flex-end);
-            width: 100%;
-            padding: 0px 1%;
-            .veg {
-              margin-top: 10%;
-              width: 1rem;
-              height: 1rem;
-              border: 2px solid brown;
-              @include flex();
-
-              @include media(tablet, mobile) {
-                margin-top: 4%;
-              }
-
-              .dot {
-                width: 0.5rem;
-                height: 0.5rem;
-                background-color: brown;
-                border-radius: 50px;
-              }
-            }
-            .addToCart {
-              p {
-                font-size: 16px;
-                color: $primary;
-                font-weight: 400;
-                cursor: pointer;
-                transition: 0.3s ease;
-                &:hover {
-                  transform: scale(0.9);
-                }
-
-                @include media(tablet, mobile) {
-                  font-size: 14px;
-                }
-              }
-            }
-            .alreadyToCart {
-              p {
-                @include flex($jc: space-between, $al: center);
-                gap: 2px;
-                font-size: 16px;
-                color: $secondary;
-                font-weight: 400;
-                transition: 0.3s ease;
-
-                @include media(tablet, mobile) {
-                  font-size: 14px;
-                }
-              }
-            }
+            font-size: 1.2rem;
+            text-align: center;
           }
         }
       }
-    }
-  }
-  .upper {
-    .box {
-      @include flex(flex-start, flex-end);
     }
   }
 }

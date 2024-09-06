@@ -26,7 +26,7 @@ function Navbar() {
     show: { opacity: 1, y: 0 },
   };
 
-  const tabs = ["Home", "Menu", "Special Dishes", "Hotels", "Contact Us"];
+  const tabs = ["Home", "Veg", "Non Veg", "Menu selection", "Corporate box"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [isAnimating, setIsAnimating] = useState(false);
   // console.log(activeTab);
@@ -115,18 +115,9 @@ function Navbar() {
           </motion.li>
           // </Link>
         ))}
+        
       </motion.ul>
 
-      <motion.ul
-        initial="hidden"
-        animate="show"
-        variants={container}
-        viewport={{ once: true }}
-        className="loginContainer"
-      >
-        <motion.li variants={item} className="login">
-          <Login />
-        </motion.li>
 
         <motion.li
           className="nav-menu-icon"
@@ -135,7 +126,6 @@ function Navbar() {
         >
           {isAnimating ? <IoClose size={22} /> : <BiMenuAltRight size={22} />}
         </motion.li>
-      </motion.ul>
 
       {/* </div> */}
     </motion.nav>

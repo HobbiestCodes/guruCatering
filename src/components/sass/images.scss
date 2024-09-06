@@ -1,6 +1,7 @@
 .img {
   position: absolute;
   width: 6rem;
+  border-radius: 100px;
   height: 6rem;
   //   z-index: 12;
 }
@@ -41,4 +42,8 @@ button {
   &:hover {
     transform: scale(0.8);
   }
+}
+
+.login {
+  
 }
