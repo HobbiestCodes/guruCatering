@@ -1,63 +1,72 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa6";
-import { LiaTimesSolid } from "react-icons/lia";
-import { useArray } from '../../funcs/context';
+import { useArray } from "../../funcs/context";
 
-function Card({items}) {
-  const {myArray, isInArray} = useArray();
-  const [itemCount, setItemCount] = useState(1);
-  
-  // Increment function
-  const incrementCount = () => {
-    setItemCount(prevCount => prevCount + 1);
+function Card({ items }) {
+  const { myArray, addToArray, removeFromArray } = useArray();
+  const [quantities, setQuantities] = useState({});
+
+  useEffect(() => {
+    const initialQuantities = myArray.reduce((acc, item) => {
+      acc[item.id] = item.quantity || 1;
+      return acc;
+    }, {});
+    setQuantities(initialQuantities);
+  }, [myArray]);
+
+  // incrementing opr
+  const handleIncrement = (id) => {
+    setQuantities((prevQuantities) => {
+      const newQuantity = (prevQuantities[id] || 1) + 1;
+      addToArray({ id, quantity: newQuantity });
+      return { ...prevQuantities, [id]: newQuantity };
+    });
   };
 
-
-  const handleDecrement = function(Id) {
-    const index = myArray.indexOf(Id);
-    if (index > -1) {
-      myArray.splice(index, 1);
-      setItemCount(prevCount => prevCount - 1);
-    }
-  }
-  const handleIncrement = function(Id) {
-    myArray.push(Id)    
-  }
-
+  // decrementing opr
+  const handleDecrement = (id) => {
+    setQuantities((prevQuantities) => {
+      const currentQuantity = prevQuantities[id] || 1;
+      if (currentQuantity <= 1) {
+        removeFromArray(id);
+        return { ...prevQuantities, [id]: 0 };
+      } else {
+        const newQuantity = currentQuantity - 1;
+        addToArray({ id, quantity: newQuantity });
+        return { ...prevQuantities, [id]: newQuantity };
+      }
+    });
+  };
 
   return (
-<div className="crdParent">
-  {items.map((item, index) => (
-    <div className="card" key={index}>
-<div className="image">
-  <img
-    src={item.image}
-    alt="image"
-    />
-</div>
-<div className="content">
-  <h1>{item.name}</h1>
-  <p>x{itemCount}</p>
-</div>
-<div className="incre">
-  <div
-    className="modal-item-btn"
-    onClick={() => handleDecrement(item._id)}
-  >
-<FaMinus size={20} className="min" />
-  </div>
-  <div
-    className="modal-item-btn"
-    onClick={incrementCount}
-  >
-    <FaPlus size={20} />
-  </div>
-</div>
-</div>
-  )
-)}
-</div>
-)
+    <div className="crdParent">
+      {myArray.map((item) => (
+        <div className="card" key={item.id}>
+          <div className="image">
+            <img src={item.image} alt="image" />
+          </div>
+          <div className="content">
+            <h1>{item.name}</h1>
+            <p>x{quantities[item.id] || 1}</p>
+          </div>
+          <div className="incre">
+            <div
+              className="modal-item-btn"
+              onClick={() => handleDecrement(item.id)}
+            >
+              <FaMinus size={20} className="min" />
+            </div>
+            <div
+              className="modal-item-btn"
+              onClick={() => handleIncrement(item.id)}
+            >
+              <FaPlus size={20} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default Card
+export default Card;

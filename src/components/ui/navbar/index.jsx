@@ -115,17 +115,15 @@ function Navbar() {
           </motion.li>
           // </Link>
         ))}
-        
       </motion.ul>
 
-
-        <motion.li
-          className="nav-menu-icon"
-          variants={item}
-          onClick={() => setIsAnimating((toggle) => !toggle)}
-        >
-          {isAnimating ? <IoClose size={22} /> : <BiMenuAltRight size={22} />}
-        </motion.li>
+      <motion.li
+        className="nav-menu-icon"
+        variants={item}
+        onClick={() => setIsAnimating((toggle) => !toggle)}
+      >
+        {isAnimating ? <IoClose size={22} /> : <BiMenuAltRight size={22} />}
+      </motion.li>
 
       {/* </div> */}
     </motion.nav>

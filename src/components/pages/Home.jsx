@@ -1,6 +1,6 @@
-import Navbar from "../ui/Navbar";
 import HomeSection from "../ui/home";
 import Plates from "../render/Plates";
+import Navbar from "../ui/navbar";
 
 function Home() {
   return (
