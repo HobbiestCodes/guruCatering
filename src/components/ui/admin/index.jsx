@@ -221,7 +221,7 @@ function Dashboard() {
     PostImage(key);
   }
 
-  if (currentUser && currentUser.role !== "admin") return navigate("/");
+  // if (currentUser && currentUser.role !== "admin") return navigate("/");
 
   return (
     <div className="container">
