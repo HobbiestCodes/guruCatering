@@ -230,9 +230,10 @@
       width: 82%;
       height: 100%;
       padding: 0px 1%;
+      overflow-x: auto;
 
       table {
-        width: 100%;
+        min-width: 100%;
         table-layout: fixed;
       }
       .header {
@@ -257,8 +258,8 @@
         }
       }
       th {
-        padding: 20px 12px;
-        text-align: left;
+        padding: 20px 15px;
+        text-align: center;
         font-weight: 600;
         font-size: 14px;
         color: #fff;
@@ -299,7 +300,7 @@
             color: white;
             font-size: 0.9rem;
           }
-          // 
+          //
           font-weight: 600;
           .edit {
             cursor: pointer;

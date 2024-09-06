@@ -23,7 +23,7 @@ function Dashboard() {
   const [activeTab, setActiveTab] = useState(tabs[2].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
   // console.log();
-  
+
   const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
@@ -422,16 +422,12 @@ function Dashboard() {
                         <th key={key}>{key}</th>
                       ))}
                       {activeTab !== "Orders" ? (
-                        <div className="empty">
-                          <h4>Action</h4>
-                        </div>
+                        <th className="empty">Action</th>
                       ) : (
                         ""
                       )}
                       {activeTab === "Orders" ? (
-                        <div className="empty">
-                          <h4>Status</h4>
-                        </div>
+                        <th className="empty">Status</th>
                       ) : (
                         ""
                       )}
@@ -485,7 +481,14 @@ function Dashboard() {
                                             ) : item[key] === false ? (
                                               "No"
                                             ) : Array.isArray(item[key]) ? (
-                                              <Link to={`/dashboard/items`} state={{arry: item[key]}} style={{textDecoration: 'none', color: 'royalblue'}}>
+                                              <Link
+                                                to={`/dashboard/items`}
+                                                state={{ arry: item[key] }}
+                                                style={{
+                                                  textDecoration: "none",
+                                                  color: "royalblue",
+                                                }}
+                                              >
                                                 View
                                               </Link>
                                             ) : (
@@ -533,15 +536,17 @@ function Dashboard() {
                               )}
                               {activeTab === "Orders" && (
                                 <select>
-                                <option value="">Select Status</option>
-                                <option value="ordered">Ordered</option>
-                                <option value="contact">Contact</option>
-                                <option value="approved">Approved</option>
-                                <option value="not">Not Approved</option>
-                                <option value="payment">Payment collected</option>
-                                <option value="done">Completed</option>
-                              </select>)
-                              }
+                                  <option value="">Select Status</option>
+                                  <option value="ordered">Ordered</option>
+                                  <option value="contact">Contact</option>
+                                  <option value="approved">Approved</option>
+                                  <option value="not">Not Approved</option>
+                                  <option value="payment">
+                                    Payment collected
+                                  </option>
+                                  <option value="done">Completed</option>
+                                </select>
+                              )}
                             </tr>
                           </>
                         ))}

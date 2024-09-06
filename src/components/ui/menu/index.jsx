@@ -40,14 +40,11 @@ function MenuItems({ category }) {
     fetchMenuItems();
   }, [selectedCategory]);
 
-
-
   const sendData = async () => {
-    const response = await axios.post('http://localhost:8080/plate', myArray);
+    const response = await axios.post("http://localhost:8080/plate", myArray);
     setForwardData(response.data);
     setActive(!active);
-  }
-
+  };
 
   const filteredMenuItems = menuItems.filter(
     (item) => item.catogery === selectedCategory
@@ -55,41 +52,65 @@ function MenuItems({ category }) {
 
   return (
     <div className="parent">
-        <Checkout setBlackout={setBlackout} blackout={blackout} items={forwardData} />
+      <Checkout
+        setBlackout={setBlackout}
+        blackout={blackout}
+        items={forwardData}
+      />
       <div className="lower">
         <div className="itemsSelected">
-          <h1>
-            {myArray.length} Items selected
-          </h1>
+          <h1>{myArray.length} Items selected</h1>
         </div>
         <div className="button">
-          <button className={myArray.length === 0 ? "disabled" : ""} onClick={() =>{myArray.length !== 0 && sendData()}}>{active ? "Back" : "Next"}</button>
-          <button className={`checkout ${active ? "visible" : "nextPhase"}`} onClick={() => setBlackout(true)}>Checkout</button>
+          <button
+            className={myArray.length === 0 ? "disabled" : ""}
+            onClick={() => {
+              myArray.length !== 0 && sendData();
+            }}
+          >
+            {active ? "Back" : "Next"}
+          </button>
+          <button
+            className={`checkout ${active ? "visible" : "nextPhase"}`}
+            onClick={() => setBlackout(true)}
+          >
+            Checkout
+          </button>
         </div>
       </div>
       <div className="child">
         <div className={active ? "visible" : "nextPhase"}>
-          <h1 style={{marginBottom: '1%', fontWeight: '800', fontSize: '3rem'}}>Your plate</h1>
-        <Card items={forwardData} />
+          <h1
+            style={{ marginBottom: "1%", fontWeight: "800", fontSize: "3rem" }}
+          >
+            Your plate
+          </h1>
+          <Card items={forwardData} />
         </div>
         <div className={active ? "nextPhase" : "visible"}>
-        <select className='filter' value={selectedCategory} onChange={handleCatogeryChange}>
-            {menu.map((menuItem) => ( 
-              <option value={menuItem.name} key={menuItem._id}>{menuItem.name}</option>
+          <select
+            className="filter"
+            value={selectedCategory}
+            onChange={handleCatogeryChange}
+          >
+            {menu.map((menuItem) => (
+              <option value={menuItem.name} key={menuItem._id}>
+                {menuItem.name}
+              </option>
             ))}
           </select>
-            <div className="bigBox">
-      {filteredMenuItems.map((menuItem) => (
-            <CircleCard
-            key={menuItem._id}
-            id={menuItem._id}
-            title={menuItem.name}
-            image={menuItem.image}
-            description={menuItem.description}
-             />
-          ))}
-            </div>
+          <div className="bigBox">
+            {filteredMenuItems.map((menuItem) => (
+              <CircleCard
+                key={menuItem._id}
+                id={menuItem._id}
+                title={menuItem.name}
+                image={menuItem.image}
+                description={menuItem.description}
+              />
+            ))}
           </div>
+        </div>
       </div>
     </div>
   );
