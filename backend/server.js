@@ -20,7 +20,7 @@ import {
   CreateFood,
   createFoodOrders,
   Catogery,
-  createOrders
+  createOrders,
 } from "./mongo/create.js";
 
 import { deleteData, removeUserFoodPlate } from "./mongo/delete.js";
@@ -124,18 +124,17 @@ app.get("/", (req, res) => {
 //     res.json({ user: null });
 //   }
 // });
-app.get('/catogery', async (req, res) => {
+app.get("/catogery", async (req, res) => {
   const response = await readCatogery();
   res.send(response);
-})
+});
 
-app.post('/catogery/create', async (req, res) => {
+app.post("/catogery/create", async (req, res) => {
   const data = req.body;
   const lowerCase = data.name.toLowerCase();
   const response = await Catogery(lowerCase);
   res.send(response);
-  
-})
+});
 
 app.put("/update", async (req, res) => {
   const { id, name, description, price, image, rating, isVeg } = req.body;
@@ -203,18 +202,41 @@ app.post("/createFood", async (req, res) => {
   });
 });
 
-app.post('/plate', async (req, res) => {
+app.post("/plate", async (req, res) => {
   const data = req.body;
- const response = await foodModel.find({_id: {$in: data}})
- res.send(response);
-})
+  const response = await foodModel.find({ _id: { $in: data } });
+  res.send(response);
+});
 
+app.post("/addOrder", async (req, res) => {
+  const {
+    name,
+    email,
+    phone,
+    address,
+    date,
+    note,
+    functionType,
+    noOfPeople,
+    foodPreference,
+    items,
+  } = req.body;
+  // console.log(req.body);
 
-app.post('/addOrder', async (req, res) => {
-  const {name, email, phone, address, date, note, items} = req.body;
- await createOrders(name, email, phone, address, date, note, items);
-  res.send({message: "Added successfully...!"})
-})
+  await createOrders(
+    name,
+    email,
+    phone,
+    address,
+    date,
+    note,
+    functionType,
+    noOfPeople,
+    foodPreference,
+    items
+  );
+  res.send({ message: "Added successfully...!" });
+});
 
 app.post("/create-food-order", async (req, res) => {
   const { userId, address, phoneNumber, orders, date } = req.body;

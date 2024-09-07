@@ -64,19 +64,11 @@ export default foodModel;
 const orderItemSchema = new mongoose.Schema(
   {
     id: {
-      type: Number,
-      required: true,
-    },
-    name: {
       type: String,
       required: true,
     },
-    category: {
+    title: {
       type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
       required: true,
     },
     quantity: {
@@ -87,7 +79,7 @@ const orderItemSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    img: {
+    image: {
       type: String,
       required: false,
     },
@@ -126,15 +118,11 @@ const Orders = new mongoose.Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
   phone: {
     type: String,
     required: true,
   },
-  date: {
+  address: {
     type: String,
     required: true,
   },
@@ -142,25 +130,39 @@ const Orders = new mongoose.Schema({
     type: String,
     required: false,
   },
+  functionType: {
+    type: String,
+    required: false,
+  },
+  noOfPeople: {
+    type: String,
+    required: false,
+  },
+  foodPreference: {
+    type: String,
+    required: false,
+  },
   items: {
-    type: [],
+    type: [orderItemSchema],
     required: true,
   },
-})
+  date: {
+    type: String,
+    required: true,
+  },
+});
 
 export const orderModel = mongoose.model("orders", Orders);
 
-
-
 const catogerySchema = new mongoose.Schema({
   image: {
-      type: String,
-      required: false,
+    type: String,
+    required: false,
   },
   name: {
-      type: String,
-      required: true
-  }
-})
+    type: String,
+    required: true,
+  },
+});
 
-export const catogeryModel = mongoose.model('catogery', catogerySchema);
+export const catogeryModel = mongoose.model("catogery", catogerySchema);

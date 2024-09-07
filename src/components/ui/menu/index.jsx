@@ -1,41 +1,60 @@
 import React, { useEffect, useState } from "react";
-import "./styles.scss";
 import axios from "axios";
 import CircleCard from "./CircleCard";
 import Card from "./Card";
 import Checkout, { EventDetails } from "../checkout/page";
 import { useArray } from "../../funcs/context";
+import "./styles.scss";
 
 function MenuItems({ category }) {
-  const [menu, selectedMenu] = useState([]);
-  const [menuItems, selectedMenuItems] = useState([]);
+  const [menu, setMenu] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const { myArray } = useArray();
   const [active, setActive] = useState(false);
   const [blackout, setBlackout] = useState(false);
   const [showEventDetails, setShowEventDetails] = useState(true);
 
-  // Form state
-  const [functionType, setFunctionType] = useState("");
-  const [noOfPeople, setNoOfPeople] = useState("");
-  const [foodPreference, setFoodPreference] = useState("");
+  const [formState, setFormState] = useState({
+    functionType: "",
+    noOfPeople: "",
+    foodPreference: "",
+  });
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
 
   const fetchMenuData = async () => {
-    const response = await axios.get("http://localhost:8080/catogery");
-    selectedMenu(response.data);
+    try {
+      const { data } = await axios.get("http://localhost:8080/catogery");
+      setMenu(data);
+    } catch (error) {
+      console.error("Failed to fetch menu data", error);
+    }
+  };
+
+  const filterMenuItems = (items) => {
+    if (formState.foodPreference === "veg") {
+      return items.filter((item) => item.isVeg);
+    }
+    if (formState.foodPreference === "non-veg") {
+      return items.filter((item) => !item.isVeg);
+    }
+    return items;
   };
 
   const fetchMenuItems = async () => {
-    let url = "http://localhost:8080/Foods";
-    if (selectedCategory) {
-      url += `/${selectedCategory}`;
+    try {
+      let url = "http://localhost:8080/Foods";
+      if (selectedCategory) url += `/${selectedCategory}`;
+      const { data } = await axios.get(url);
+      const filteredItems = filterMenuItems(data);
+      setMenuItems(filteredItems);
+    } catch (error) {
+      console.error("Failed to fetch menu items", error);
+      // Consider adding user feedback for errors
     }
-    const response = await axios.get(url);
-    selectedMenuItems(response.data);
   };
 
   useEffect(() => {
@@ -44,24 +63,21 @@ function MenuItems({ category }) {
 
   useEffect(() => {
     fetchMenuItems();
-  }, [selectedCategory]);
-
-  const filteredMenuItems = selectedCategory
-    ? menuItems.filter((item) => item.catogery === selectedCategory)
-    : menuItems;
+  }, [selectedCategory, formState.foodPreference]);
 
   const handleFormSubmit = () => {
-    if (
-      functionType.trim() === "" ||
-      noOfPeople.trim() === "" ||
-      foodPreference.trim() === ""
-    ) {
+    const { functionType, noOfPeople, foodPreference } = formState;
+    if (!functionType.trim() || !noOfPeople.trim() || !foodPreference.trim()) {
       return;
-    } else {
-      console.log(functionType, noOfPeople, foodPreference);
-      setBlackout(false);
-      setShowEventDetails(false);
     }
+    console.log(formState);
+    setBlackout(false);
+    setShowEventDetails(false);
+  };
+
+  const handleFormStateChange = (e) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   return (
@@ -70,12 +86,18 @@ function MenuItems({ category }) {
         <EventDetails
           blackout={showEventDetails}
           setBlackout={setShowEventDetails}
-          functionType={functionType}
-          setFunctionType={setFunctionType}
-          noOfPeople={noOfPeople}
-          setNoOfPeople={setNoOfPeople}
-          foodPreference={foodPreference}
-          setFoodPreference={setFoodPreference}
+          functionType={formState.functionType}
+          setFunctionType={(value) =>
+            setFormState((prev) => ({ ...prev, functionType: value }))
+          }
+          noOfPeople={formState.noOfPeople}
+          setNoOfPeople={(value) =>
+            setFormState((prev) => ({ ...prev, noOfPeople: value }))
+          }
+          foodPreference={formState.foodPreference}
+          setFoodPreference={(value) =>
+            setFormState((prev) => ({ ...prev, foodPreference: value }))
+          }
           onSubmit={handleFormSubmit}
         />
       ) : (
@@ -83,6 +105,9 @@ function MenuItems({ category }) {
           <Checkout
             setBlackout={setBlackout}
             blackout={blackout}
+            functionType={formState.functionType}
+            noOfPeople={formState.noOfPeople}
+            foodPreference={formState.foodPreference}
             items={myArray}
           />
           <div className="lower">
@@ -92,9 +117,7 @@ function MenuItems({ category }) {
             <div className="button">
               <button
                 className={myArray.length === 0 ? "disabled" : ""}
-                onClick={() => {
-                  myArray.length !== 0 && setActive(!active); // Toggle between 'Back' and 'Next'
-                }}
+                onClick={() => myArray.length !== 0 && setActive(!active)}
               >
                 {active ? "Back" : "Next"}
               </button>
@@ -104,27 +127,19 @@ function MenuItems({ category }) {
               >
                 Checkout
               </button>
-              <button
+              {/* <button
                 className={`event-details-button ${
                   active ? "visible" : "nextPhase"
                 }`}
                 onClick={() => setShowEventDetails(true)}
               >
                 Event Details
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="child">
             <div className={active ? "visible" : "nextPhase"}>
-              <h1
-                style={{
-                  marginBottom: "1%",
-                  fontWeight: "800",
-                  fontSize: "3rem",
-                }}
-              >
-                Your plate
-              </h1>
+              <h1 className="plate-heading">Your plate</h1>
               <Card />
             </div>
             <div className={active ? "nextPhase" : "visible"}>
@@ -141,15 +156,19 @@ function MenuItems({ category }) {
                 ))}
               </select>
               <div className="bigBox">
-                {filteredMenuItems.map((menuItem) => (
-                  <CircleCard
-                    key={menuItem._id}
-                    id={menuItem._id}
-                    title={menuItem.name}
-                    image={menuItem.image}
-                    description={menuItem.description}
-                  />
-                ))}
+                {menuItems.length > 0 ? (
+                  menuItems.map((menuItem) => (
+                    <CircleCard
+                      key={menuItem._id}
+                      id={menuItem._id}
+                      title={menuItem.name}
+                      image={menuItem.image}
+                      description={menuItem.description}
+                    />
+                  ))
+                ) : (
+                  <h1>No food is available</h1>
+                )}
               </div>
             </div>
           </div>

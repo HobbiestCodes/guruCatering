@@ -1,89 +1,150 @@
-@import '../../sass/global';
+@import "../../sass/global";
 
 .hide {
-    display: none;
+  display: none;
+}
+
+.blackout {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  @include flex();
+  transition: 0.3s all ease;
+
+  .back {
+    position: absolute;
+    top: 3%;
+    left: 1%;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    border-radius: 12px;
+    background-color: $primary;
+    opacity: 0.8;
+    padding: 0.3rem 0.5rem;
+    &:hover {
+      opacity: 1;
+    }
   }
 
-  
-.blackout {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba($color: black, $alpha: 0.7);
-    z-index: 9999;
-    display: flex;
-    @include flex();
-    transition: 0.3s all ease;
-    .back {
-      // display: none;
-      position: absolute;
-      top: 3%;
-      left: 1%;
-      font-size: 1.5rem;
-      color: white;
-      cursor: pointer;
-      border-radius: 12px;
-      background-color: $primary;
-      opacity: 0.8;
-      padding: 0.3rem 0.5rem;
-      &:hover {
-        opacity: 1;
-      }
+  .container {
+    width: 90%; // Default width for small screens
+    max-width: 500px; // Max width for medium screens
+    height: auto; // Allow height to be dynamic
+    background-color: aliceblue;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    @include flex(flex-start, flex-start, column);
+
+    h1 {
+      margin-bottom: 1rem;
     }
-    .container {
-      width: 40%;
-      height: 90%;
-      background-color: aliceblue;
-      border-radius: 10px;
-      padding: 1rem 1.5rem;
+
+    form {
+      width: 100%;
+      margin-top: 5%;
       @include flex(flex-start, flex-start, column);
-      form {
+      gap: 15px;
+
+      input,
+      textarea,
+      select {
         width: 100%;
-        margin-top: 5%;
-        @include flex(flex-start, flex-start);
-        gap: 10px;
-        // position: relative;
-        input,
-        textarea {
-          width: 49%;
-          padding: 2% 3%;
-          background-color: rgb(236, 236, 236);
-          border-radius: 6px;
-          border: none;
-          outline: none;
-          resize: none;
-          font-size: 1rem;
-          &::-webkit-outer-spin-button,
-          &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-          &.phone {
-            width: 100%;
-          }
-          &.address {
-            // padding: ;
-            text-align: left;
-            height: 150px;
-          }
+        padding: 2% 3%;
+        background-color: rgb(236, 236, 236);
+        border-radius: 6px;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
         }
-        .sumbit {
-          position: absolute;
-          background-color: rgba($color: $primary, $alpha: 0.2);
-          color: $primary;
-          padding: 0.3rem 0.5rem;
-          font-weight: 500;
-          border: none;
-          outline: none;
-          font-size: 1.3rem;
-          width: fit-content;
-          height: fit-content;
-          bottom: 3%;
-          right: 5%;
-          border-radius: 10px;
-          cursor: pointer;
+      }
+
+      .phone {
+        width: 100%;
+      }
+
+      .address {
+        text-align: left;
+        height: auto; // Allow height to be dynamic
+        max-height: 150px; // Ensure it doesn't exceed a reasonable height
+      }
+
+      .select {
+        cursor: pointer;
+      }
+
+      .submit {
+        background-color: rgba($primary, 0.2);
+        color: $primary;
+        padding: 0.3rem 0.5rem;
+        font-weight: 500;
+        border: none;
+        outline: none;
+        font-size: 1.3rem;
+        width: fit-content;
+        height: fit-content;
+        margin-top: 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        align-self: flex-end;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: rgba($primary, 0.4);
         }
       }
     }
   }
+}
+
+// Media Queries for responsiveness
+@media (max-width: 768px) {
+  .blackout {
+    .container {
+      width: 95%;
+      padding: 0.8rem 1.2rem;
+    }
+
+    .back {
+      font-size: 1.2rem;
+      padding: 0.2rem 0.4rem;
+    }
+
+    form .submit {
+      font-size: 1.1rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .blackout {
+    .container {
+      width: 100%;
+      padding: 0.5rem;
+    }
+
+    .back {
+      font-size: 1rem;
+      padding: 0.1rem 0.3rem;
+    }
+
+    form .submit {
+      font-size: 1rem;
+      padding: 0.1rem 0.3rem;
+    }
+
+    .address {
+      max-height: 120px; // Adjust height for very small screens
+    }
+  }
+}

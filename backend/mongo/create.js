@@ -1,4 +1,8 @@
-import foodModel, { foodOrdersModel, catogeryModel, orderModel } from "./schema.js";
+import foodModel, {
+  foodOrdersModel,
+  catogeryModel,
+  orderModel,
+} from "./schema.js";
 export async function CreateFood(
   name,
   description,
@@ -24,24 +28,36 @@ export async function CreateFood(
   }
 }
 
-
-export const createOrders = async (name, email, phone, address, date, note, items) => {
+export const createOrders = async (
+  name,
+  email,
+  phone,
+  address,
+  date,
+  note,
+  functionType,
+  noOfPeople,
+  foodPreference,
+  items
+) => {
   try {
     const order = new orderModel({
-      name: name,
-      description: email,
-      email: email,
-      phone: phone,
-      address: address,
-      date: date,
-      note: note,
-      items: items
+      name,
+      email,
+      phone,
+      address,
+      date,
+      note,
+      functionType,
+      noOfPeople,
+      foodPreference,
+      items,
     });
     await order.save();
   } catch (e) {
     console.log("error" + e);
   }
-}
+};
 
 export async function createFoodOrders(
   userId,
@@ -138,13 +154,12 @@ export async function createUserFoodPlates(userId, plates) {
 }
 
 export async function Catogery(name) {
-    try {
-        const catogery = new catogeryModel({
-            name: name,
-        })
-        await catogery.save();
-    }
-    catch(e) {
-        console.log("error" + e);       
-    }
+  try {
+    const catogery = new catogeryModel({
+      name: name,
+    });
+    await catogery.save();
+  } catch (e) {
+    console.log("error" + e);
+  }
 }
