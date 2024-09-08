@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "./styles.scss";
 
@@ -29,21 +28,21 @@ function Selection() {
       <div className="portions upper">
         <div className="box">
           {categories.map((category, index) => (
-            // <Link
-            //   key={index}
-            //   to={`/menu/${category.name}`}
-            //   className="category-link"
-            // >
-            <div key={index} className="imgContainer">
-              <img
-                src="https://picsum.photos/1080/1920?random=1"
-                alt={category.name}
-              />
-              <div className="popUp">
-                <h1>{category.name}</h1>
+            <a
+              key={index}
+              href={`/menu/${category.name}`}
+              className="category-link"
+            >
+              <div key={index} className="imgContainer">
+                <img
+                  src="https://picsum.photos/1080/1920?random=1"
+                  alt={category.name}
+                />
+                <div className="popUp">
+                  <h1>{category.name}</h1>
+                </div>
               </div>
-            </div>
-            // </Link>
+            </a>
           ))}
         </div>
       </div>
