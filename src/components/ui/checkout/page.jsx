@@ -1,26 +1,84 @@
 import React, { useState } from "react";
-import "./styles.scss";
 import axios from "axios";
+import "./styles.scss";
 
-function Checkout({ items, blackout, setBlackout }) {
+function Checkout({
+  items,
+  blackout,
+  setBlackout,
+  functionType,
+  noOfPeople,
+  foodPreference,
+}) {
   const [name, setName] = useState("");
-  const [email, setemail] = useState("");
-  const [phone, setphone] = useState("");
-  const [address, setaddress] = useState("");
-  const [date, setdate] = useState("");
-  const [note, setnote] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [date, setDate] = useState("");
+  const [note, setNote] = useState("");
 
-  const placeOrder = async () => {
-    const response = await axios.post("http://localhost:8080/addOrder", {
-      name: name,
-      email: email,
-      phone: phone,
-      address: address,
-      date: date,
-      note: note,
-      items: items,
-    });
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+
+    if (
+      name.trim() === "" ||
+      email.trim() === "" ||
+      phone.trim() === "" ||
+      address.trim() === "" ||
+      date.trim() === "" ||
+      !Array.isArray(items) ||
+      functionType.trim() === "" ||
+      noOfPeople.trim() === "" ||
+      foodPreference.trim() === ""
+    ) {
+      console.log(
+        "not submitted",
+        name,
+        phone,
+        email,
+        address,
+        date,
+        note,
+        functionType,
+        noOfPeople,
+        foodPreference,
+        items
+      );
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:8080/addOrder", {
+        name,
+        phone,
+        email,
+        address,
+        date,
+        note,
+        functionType,
+        noOfPeople,
+        foodPreference,
+        items,
+      });
+      // console.log("Order submitted", response.data);
+      console.log(
+        "submitted",
+        name,
+        phone,
+        email,
+        address,
+        date,
+        note,
+        functionType,
+        noOfPeople,
+        foodPreference,
+        items
+      );
+    } catch (error) {
+      console.error("Error submitting order", error);
+    }
   };
+
   return (
     <div className={blackout ? "blackout" : "hide"}>
       <div className="back" onClick={() => setBlackout(false)}>
@@ -28,7 +86,7 @@ function Checkout({ items, blackout, setBlackout }) {
       </div>
       <div className="container">
         <h1>Please provide your details</h1>
-        <form>
+        <form onSubmit={handlePlaceOrder}>
           <input
             required
             type="text"
@@ -38,42 +96,38 @@ function Checkout({ items, blackout, setBlackout }) {
           />
           <input
             required
-            type="number"
+            type="tel"
             placeholder="Your Phone no. *"
             value={phone}
-            onChange={(e) => setphone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <input
             required
-            className="phone"
             type="email"
             placeholder="Your email address *"
             value={email}
-            onChange={(e) => setemail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <textarea
             required
-            className="phone address"
             placeholder="Your Address *"
             value={address}
-            onChange={(e) => setaddress(e.target.value)}
+            onChange={(e) => setAddress(e.target.value)}
           />
           <input
             required
             type="date"
-            className="phone"
             placeholder="Please choose date *"
             value={date}
-            onChange={(e) => setdate(e.target.value)}
+            onChange={(e) => setDate(e.target.value)}
           />
           <textarea
-            required={false}
-            placeholder="Your note"
-            className=" phone address"
+            placeholder="Your note (optional)"
             value={note}
-            onChange={(e) => setnote(e.target.value)}
+            rows={4}
+            onChange={(e) => setNote(e.target.value)}
           />
-          <button className="sumbit" onClick={() => placeOrder()}>
+          <button type="submit" className="submit">
             Place order
           </button>
         </form>
@@ -86,7 +140,6 @@ export default Checkout;
 
 export function EventDetails({
   blackout,
-  setBlackout,
   functionType,
   setFunctionType,
   noOfPeople,
@@ -97,9 +150,6 @@ export function EventDetails({
 }) {
   return (
     <div className={blackout ? "blackout" : "hide"}>
-      {/* <div className="back" onClick={() => setBlackout(false)}>
-        Back
-      </div> */}
       <div className="container">
         <h1>Event Details</h1>
         <form onSubmit={(e) => e.preventDefault()}>
@@ -140,9 +190,9 @@ export function EventDetails({
               onChange={(e) => setFoodPreference(e.target.value)}
             >
               <option value="">Select Food Preference</option>
-              <option value="Veg">Veg</option>
-              <option value="Non-Veg">Non-Veg</option>
-              <option value="Both">Both</option>
+              <option value="veg">Veg</option>
+              <option value="non-veg">Non-Veg</option>
+              <option value="both">Both</option>
             </select>
           </label>
           <button className="submit" onClick={onSubmit}>
