@@ -19,7 +19,7 @@ function MenuItems({ category, isVeg }) {
   const [formState, setFormState] = useState({
     functionType: "",
     noOfPeople: "",
-    foodPreference: isVeg === "yes" ? "veg" : "non-veg",
+    foodPreference: (isVeg === "yes" ? "veg" : "non-veg") ?? "",
   });
 
   useEffect(() => {

@@ -6,7 +6,6 @@ import "./styles.scss";
 function Selection() {
   const [categories, setCategories] = useState([]);
 
-  // Fetch categories from the server
   const getCategories = async () => {
     try {
       const response = await axios.get("http://localhost:8080/catogery");
@@ -29,21 +28,22 @@ function Selection() {
       <div className="portions upper">
         <div className="box">
           {categories.map((category, index) => (
-            // <Link
-            //   key={index}
-            //   to={`/menu/${category.name}`}
-            //   className="category-link"
-            // >
-            <div key={index} className="imgContainer">
-              <img
-                src="https://picsum.photos/1080/1920?random=1"
-                alt={category.name}
-              />
-              <div className="popUp">
-                <h1>{category.name}</h1>
+            <div
+              key={index}
+              onClick={() => (window.location = `/menu/${category.name}`)}
+              // to={`/menu/${category.name}`}
+              className="category-link"
+            >
+              <div key={index} className="imgContainer">
+                <img
+                  src="https://picsum.photos/1080/1920?random=1"
+                  alt={category.name}
+                />
+                <div className="popUp">
+                  <h1>{category.name}</h1>
+                </div>
               </div>
             </div>
-            // </Link>
           ))}
         </div>
       </div>

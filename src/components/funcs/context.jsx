@@ -6,7 +6,7 @@ export const useArray = () => useContext(ArrayContext);
 
 export const ArrayProvider = ({ children }) => {
   const [myArray, setMyArray] = useState([]);
-  console.log(myArray);
+  // console.log(myArray);
 
   useEffect(() => {
     const savedArray = JSON.parse(localStorage.getItem("myArray")) || [];
