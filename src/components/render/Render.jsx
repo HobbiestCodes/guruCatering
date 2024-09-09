@@ -108,9 +108,7 @@ function Render() {
               <Home />
             </div>
 
-            <div
-              style={{ width: "100vw", height: "100vh", position: "relative" }}
-            >
+            <div style={{ width: "100vw", position: "relative" }}>
               <Modal
                 status={status}
                 isOpen={isModalOpen}
@@ -228,12 +226,7 @@ function Render() {
                   )}
                 </AnimatePresence>
               </Modal>
-              <Selection
-                setIsModalOpen={setIsModalOpen}
-                foodItems={foodItems}
-                setItemsToShow={setItemsToShow}
-                itemsToShow={itemsToShow}
-              />
+              <Selection />
             </div>
           </Scroll>
         </ScrollControls>

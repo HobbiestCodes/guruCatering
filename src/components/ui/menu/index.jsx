@@ -6,7 +6,7 @@ import Checkout, { EventDetails } from "../checkout/page";
 import { useArray } from "../../funcs/context";
 import "./styles.scss";
 
-function MenuItems({ category }) {
+function MenuItems({ category, isVeg }) {
   const [menu, setMenu] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(category || "");
@@ -19,7 +19,7 @@ function MenuItems({ category }) {
   const [formState, setFormState] = useState({
     functionType: "",
     noOfPeople: "",
-    foodPreference: "",
+    foodPreference: (isVeg === "yes" ? "veg" : "non-veg") || "",
   });
 
   const handleCategoryChange = (e) => {
@@ -106,7 +106,7 @@ function MenuItems({ category }) {
             functionType={formState.functionType}
             noOfPeople={formState.noOfPeople}
             foodPreference={formState.foodPreference}
-            goBackTOMenu={setActive(!active)}
+            goBackTOMenu={() => setActive(!active)}
             items={myArray}
           />
           <div className="lower">
