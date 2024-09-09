@@ -16,8 +16,8 @@ function Items() {
               <img src={item.image} alt="image" />
             </div>
             <div className="content">
-              <h1>{item.name}</h1>
-              <p>x1</p>
+              <h1>{item.title}</h1>
+              <p>x{item.quantity}</p>
             </div>
           </div>
         ))}

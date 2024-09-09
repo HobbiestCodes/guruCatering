@@ -19,9 +19,9 @@
     padding: 1% 2%;
 
     &.userEd {
-      height: 12rem;
-      left: 25%;
-      top: 1%;
+      height: 20rem;
+      left: 40%;
+      top: 20%;
     }
     &.create {
       left: 40%;
@@ -299,8 +299,6 @@
             color: white;
             font-size: 0.9rem;
           }
-          // 
-          font-weight: 600;
           .edit {
             cursor: pointer;
             &:hover {

@@ -21,11 +21,12 @@ import {
   createFoodOrders,
   Catogery,
   createOrders,
+  createAdmins,
 } from "./mongo/create.js";
 
 import { deleteData, removeUserFoodPlate } from "./mongo/delete.js";
 import { updateFood, updateUser } from "./mongo/update.js";
-import foodModel from "./mongo/schema.js";
+import foodModel, { adminModel } from "./mongo/schema.js";
 
 dotenv.config();
 
@@ -87,43 +88,17 @@ app.use(passport.session());
 app.get("/", (req, res) => {
   res.redirect("http://localhost:5173");
 });
-// app.get(
-//   "/auth/google",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
-// app.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", { failureRedirect: "/" }),
-//   (req, res) => {
-//     res.redirect("/"); // Redirect to the dashboard or another page
-//   }
-// );
-// Logout Route
-// app.get("/api/logout", (req, res) => {
-//   req.logout((err) => {
-//     if (err) {
-//       return res.status(500).send("Error logging out");
-//     }
-//     req.session.destroy(req.sessionID, (err) => {
-//       if (err) {
-//         return res.status(500).send("Error destroying session");
-//       }
-//       res.clearCookie("connection.sid");
-//       res.send("Logged out");
-//     });
-//   });
-// });
 
-// app.get("/api/current_user", (req, res) => {
-//   // console.log("Session ID:", req.sessionID);
-//   // console.log("Session Data:", req.session);
+app.post('/admins/new', async function(req, res) {
+  const { email, password, name } = req.body;
+  const userEmail = await adminModel.find({ email: email});
+  
+  if (email !== userEmail[0]?.email) {
+    await createAdmins(name, email, password)
+    res.send({"message": "Added successfully", "success": "true"});
+  }
+})
 
-//   if (req.isAuthenticated()) {
-//     res.json({ user: req.user });
-//   } else {
-//     res.json({ user: null });
-//   }
-// });
 app.get("/catogery", async (req, res) => {
   const response = await readCatogery();
   res.send(response);
@@ -138,7 +113,6 @@ app.post("/catogery/create", async (req, res) => {
 
 app.put("/update", async (req, res) => {
   const { id, name, description, price, image, rating, isVeg } = req.body;
-  // console.log(id, name, description, price, image, rating, isVeg);
   const response = await updateFood(
     id,
     name,
@@ -153,15 +127,11 @@ app.put("/update", async (req, res) => {
   });
 });
 
-app.get("/Users", async (req, res) => {
-  const users = await readUsers();
+app.get("/Admins", async (req, res) => {
+  const users = await readAdmins();  
   res.send(users);
 });
 
-app.get("/Admins", async (req, res) => {
-  const users = await readAdmins();
-  res.send(users);
-});
 
 app.get("/Foods", async (req, res) => {
   const food = await readAllFoods();
@@ -187,8 +157,8 @@ app.post("/delete", async (req, res) => {
   });
 });
 app.put("/users/update", async (req, res) => {
-  const { id, role } = req.body;
-  const response = await updateUser(id, role);
+  const { id, name, email, password } = req.body;
+  const response = await updateUser(id, name, email, password);
   res.send({
     message: { response },
   });

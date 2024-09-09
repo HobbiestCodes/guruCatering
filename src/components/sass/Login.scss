@@ -1,0 +1,122 @@
+@import "../sass/global";
+
+.main {
+  @include fullScreen();
+  @include flex();
+//   background: rgb(255, 235, 198);
+
+  .container {
+    background-color: #ffffff;
+    width: 400px;
+    height: 500px;
+    // margin: 1rem auto;
+    border-radius: 1.5em;
+    box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+    @include flex(flex-start, $fd: column);
+    padding-top: 1%;
+    gap: 1rem;
+
+    img {
+        width: 50%;
+        height: 20%;
+        // @include flex();
+
+    }
+  }
+
+  .upper {
+        margin-bottom: 6%;
+      .sign {
+        //   padding-top: 40px;
+    color: orange;
+    font-weight: 400;
+    font-size: 23px;
+  }
+  .or {
+    font-weight: 300;
+    color: grey;
+}
+}
+
+form {
+    position: relative;
+    p {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        position: absolute;
+        left: 28%;
+        top: 82%;
+        font-weight: 400;
+        opacity: 0;
+        color: $danger;
+    }
+  .un {
+    width: 76%;
+    color: rgb(38, 50, 56);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    background: rgba(136, 126, 126, 0.04);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(116, 116, 116, 0.247);
+    margin-bottom: 50px;
+    margin-left: 46px;
+    text-align: center;
+    margin-bottom: 27px;
+    font-weight: 300;
+    &:focus {
+      border: 2px solid rgba($color: orange, $alpha: 0.4) !important;
+    }
+  }
+
+
+      
+      
+      .submit {
+    position: absolute;
+    bottom: -25%;
+    left: 35%;
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+    border-radius: 5em;
+    color: #fff;
+    background: linear-gradient(to right, rgb(255, 180, 40), rgb(255, 206, 116));
+    border: 0;
+    padding: 10px 40px;
+    font-size: 16px;
+        transition: 0.2s all ease-in-out;
+    &:hover {
+        transform: scale(1.1);
+    }
+    &:active {
+        transition: 0.2s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transform: scale(0.9);
+    }
+}
+
+  .forgot {
+    margin-top: 10px;
+    text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+    color: #e1bee7;
+}
+
+a {
+    text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+    color: #e1bee7;
+    text-decoration: none;
+  }
+}
+
+  @media (max-width: 600px) {
+    .main {
+        border-radius: 0px;
+    }
+  }
+}

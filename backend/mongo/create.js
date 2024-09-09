@@ -2,6 +2,7 @@ import foodModel, {
   foodOrdersModel,
   catogeryModel,
   orderModel,
+  adminModel
 } from "./schema.js";
 export async function CreateFood(
   name,
@@ -159,6 +160,20 @@ export async function Catogery(name) {
       name: name,
     });
     await catogery.save();
+  } catch (e) {
+    console.log("error" + e);
+  }
+}
+
+
+export const createAdmins = async (name, email, password) => {
+  try {
+    const admin = new adminModel({
+      name: name,
+      email: email,
+      password: password,
+    });
+    await admin.save();
   } catch (e) {
     console.log("error" + e);
   }

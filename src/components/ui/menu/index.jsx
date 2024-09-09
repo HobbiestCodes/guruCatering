@@ -19,8 +19,15 @@ function MenuItems({ category, isVeg }) {
   const [formState, setFormState] = useState({
     functionType: "",
     noOfPeople: "",
-    foodPreference: (isVeg === "yes" ? "veg" : "non-veg") || "",
+    foodPreference: isVeg === "yes" ? "veg" : "non-veg",
   });
+
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      foodPreference: isVeg === "yes" ? "veg" : "non-veg",
+    }));
+  }, [isVeg]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -50,11 +57,12 @@ function MenuItems({ category, isVeg }) {
       let url = "http://localhost:8080/Foods";
       if (selectedCategory) url += `/${selectedCategory}`;
       const { data } = await axios.get(url);
+      // console.log(data);
+
       const filteredItems = filterMenuItems(data);
       setMenuItems(filteredItems);
     } catch (error) {
       console.error("Failed to fetch menu items", error);
-      // Consider adding user feedback for errors
     }
   };
 
@@ -71,12 +79,12 @@ function MenuItems({ category, isVeg }) {
     if (!functionType.trim() || !noOfPeople.trim() || !foodPreference.trim()) {
       return setEventError("All fields are required");
     }
-    // console.log(formState);
     setEventError("");
     setBlackout(false);
     setShowEventDetails(false);
   };
 
+  // console.log(formState.functionType, formState.noOfPeople, formState.foodPreference, menuItems);
   return (
     <div className="parent">
       {showEventDetails ? (

@@ -21,6 +21,7 @@ import Items from "./routers/Items.jsx";
 import Navbar from "./components/ui/navbar/index.jsx";
 import Tea from "./components/ui/loader/tea.jsx";
 import Render from "./components/render/Render.jsx";
+import Login from "./components/pages/Login.jsx";
 
 // const ReactRouter = () => {
 //   const router = createBrowserRouter([
@@ -54,6 +55,11 @@ import Render from "./components/render/Render.jsx";
 //       element: <Items />,
 //       errorElement: <ErrorPage />,
 //     },
+// {
+//   path: "/admin/login",
+//   element: <Login />,
+//   errorElement: <ErrorPage />,
+// },
 //   ]);
 //   return <RouterProvider router={router} />;
 // };
@@ -93,6 +99,12 @@ createRoot(document.getElementById("root")).render(
           <Route
             path="/dashboard/items"
             element={<Items />}
+            errorElement={<ErrorPage />}
+          />
+
+          <Route
+            path="/admin/login"
+            element={<Login />}
             errorElement={<ErrorPage />}
           />
         </Routes>
