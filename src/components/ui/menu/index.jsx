@@ -50,6 +50,8 @@ function MenuItems({ category }) {
       let url = "http://localhost:8080/Foods";
       if (selectedCategory) url += `/${selectedCategory}`;
       const { data } = await axios.get(url);
+      console.log(data);
+      
       const filteredItems = filterMenuItems(data);
       setMenuItems(filteredItems);
     } catch (error) {

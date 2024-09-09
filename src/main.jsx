@@ -12,6 +12,7 @@ import Update from "./routers/Update.jsx";
 import Menu from "./routers/Menu.jsx";
 import { ArrayProvider } from "./components/funcs/context.jsx";
 import Items from "./routers/Items.jsx";
+import Login from "./components/pages/Login.jsx";
 
 const ReactRouter = () => {
   const router = createBrowserRouter([
@@ -43,6 +44,11 @@ const ReactRouter = () => {
     {
       path: "/dashboard/items",
       element: <Items />,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/admin/login",
+      element: <Login />,
       errorElement: <ErrorPage />,
     },
   ]);

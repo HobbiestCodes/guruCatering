@@ -30,6 +30,8 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [price, setPrice] = useState("");
   const [rating, setRating] = useState("");
   const [isVeg, setIsVeg] = useState(false);
@@ -38,11 +40,12 @@ function Dashboard() {
   const [catogeries, setCatogeries] = useState("");
   const [createCatogery, setCreateCatogery] = useState(false);
 
+  const [admin, setAdmin] = useState(false);
   const [image, setImage] = useState("");
   const [key, setKey] = useState("");
 
-  const [user, setUser] = useState(false);
-  const [role, setRole] = useState("");
+
+
   const [create, setCreate] = useState(false);
   const [id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -56,10 +59,6 @@ function Dashboard() {
 
   useEffect(() => {
     reFetch();
-    if (activeTab === "Admins") {
-      setUser(true);
-      data[0]?.role ? setRole(data[0].role) : "";
-    }
   }, [activeTab]);
 
   const handleEdit = async (action, id) => {
@@ -99,6 +98,10 @@ function Dashboard() {
       });
 
       setName(response.data.name);
+      setEmail(response.data.email);
+      setPassword(response.data.password);
+      // console.log(url);
+      
       setPrice(response.data.price);
       setRating(response.data.rating);
       setIsVeg(response.data.isVeg);
@@ -136,7 +139,9 @@ function Dashboard() {
   const handleUserUpdate = async (id) => {
     const response = await axios.put(`http://localhost:8080/users/update`, {
       id: id,
-      role: role,
+      name: name,
+      email: email,
+      password: password,
     });
     console.log("User updated:", response.data);
     setVisible(false);
@@ -350,9 +355,50 @@ function Dashboard() {
                 )}
               </form>
             </div>
-          ) : (
-            ""
-          )}
+          ) : activeTab==="Admins" ? (
+              <div className="visible userEd">
+                <h1>Update Admin Data <IoCloseOutline
+                  className="icons"
+                  onClick={() => {
+                    setCreate(false), setUpdate(false), setVisible(false);
+                    setName(""),
+                      setPrice(""),
+                      setRating(""),
+                      setIsVeg(false),
+                      setDescription("");
+                  }}
+                /></h1>
+                <form className="form">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {update && (
+                      <button
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleUserUpdate(id)}
+                      >
+                        Update Admin
+                      </button>
+                    )}
+  
+                </form>
+              </div>
+          ) : ""}
         </>
       ) : (
         ""
@@ -511,6 +557,8 @@ function Dashboard() {
                                           {
                                             setVisible(true);
                                             setUpdate(true);
+                                            setAdmin(true);
+
                                             update
                                               ? console.log("nalla")
                                               : handleEdit("edit", item._id),

@@ -1,5 +1,5 @@
 import foodModel, { foodOrdersModel, orderModel } from "./schema.js";
-import { userModel, catogeryModel } from "./schema.js";
+import { adminModel, catogeryModel } from "./schema.js";
 
 export const readFood = async (catogery) => {
   const data = await foodModel.find({catogery: catogery});
@@ -15,19 +15,19 @@ export const readById = async (endpoint, id) => {
     const data = await foodModel.findById(id);
     return data;
   }
-  if (endpoint === "Users") {
-    const data = await userModel.findById(id);
+  if (endpoint === "Admins") {
+    const data = await adminModel.findById(id);
     return data;
   }
 };
 
-export const readUsers = async () => {
-  const data = await userModel.find({ role: "user" });
+export const readUsers = async (id) => {
+  const data = await adminModel.findById(id);
   return data;
 };
 
 export const readAdmins = async () => {
-  const data = await userModel.find({ role: "admin" });
+  const data = await adminModel.find();
   return data;
 };
 

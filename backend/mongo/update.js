@@ -1,4 +1,4 @@
-import foodModel, { userModel } from "./schema.js";
+import foodModel, { adminModel } from "./schema.js";
 
 export const updateFood = (
   id,
@@ -16,8 +16,8 @@ export const updateFood = (
   );
 };
 
-export const updateUser = async (id, role) => {
-  return userModel.findByIdAndUpdate({ _id: id }, { role: role });
+export const updateUser = async (id, name, email, password) => {
+  return adminModel.findByIdAndUpdate({ _id: id }, { name: name, email: email, password: password});
 };
 
 export async function updateUserFoodPlate(userId, plateId, action) {
