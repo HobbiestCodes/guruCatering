@@ -14,6 +14,7 @@ function MenuItems({ category }) {
   const [active, setActive] = useState(false);
   const [blackout, setBlackout] = useState(false);
   const [showEventDetails, setShowEventDetails] = useState(true);
+  const [eventError, setEventError] = useState("");
 
   const [formState, setFormState] = useState({
     functionType: "",
@@ -68,16 +69,12 @@ function MenuItems({ category }) {
   const handleFormSubmit = () => {
     const { functionType, noOfPeople, foodPreference } = formState;
     if (!functionType.trim() || !noOfPeople.trim() || !foodPreference.trim()) {
-      return;
+      return setEventError("All fields are required");
     }
-    console.log(formState);
+    // console.log(formState);
+    setEventError("");
     setBlackout(false);
     setShowEventDetails(false);
-  };
-
-  const handleFormStateChange = (e) => {
-    const { name, value } = e.target;
-    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   return (
@@ -99,6 +96,7 @@ function MenuItems({ category }) {
             setFormState((prev) => ({ ...prev, foodPreference: value }))
           }
           onSubmit={handleFormSubmit}
+          eventError={eventError}
         />
       ) : (
         <>
@@ -108,6 +106,7 @@ function MenuItems({ category }) {
             functionType={formState.functionType}
             noOfPeople={formState.noOfPeople}
             foodPreference={formState.foodPreference}
+            goBackTOMenu={setActive(!active)}
             items={myArray}
           />
           <div className="lower">

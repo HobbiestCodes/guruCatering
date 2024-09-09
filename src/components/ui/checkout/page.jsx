@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useArray } from "../../funcs/context";
 import "./styles.scss";
 
 function Checkout({
@@ -9,13 +10,22 @@ function Checkout({
   functionType,
   noOfPeople,
   foodPreference,
+  goBackTOMenu,
 }) {
+  const { clearMyArray } = useArray();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
+  const [error, setError] = useState("");
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPhone = (phone) => /^\d{10}$/.test(phone);
+
+  const today = new Date().toISOString().split("T")[0];
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -29,21 +39,11 @@ function Checkout({
       !Array.isArray(items) ||
       functionType.trim() === "" ||
       noOfPeople.trim() === "" ||
-      foodPreference.trim() === ""
+      foodPreference.trim() === "" ||
+      !isValidEmail(email) ||
+      !isValidPhone(phone)
     ) {
-      console.log(
-        "not submitted",
-        name,
-        phone,
-        email,
-        address,
-        date,
-        note,
-        functionType,
-        noOfPeople,
-        foodPreference,
-        items
-      );
+      setError("Please fill in all fields correctly.");
       return;
     }
 
@@ -60,22 +60,20 @@ function Checkout({
         foodPreference,
         items,
       });
-      // console.log("Order submitted", response.data);
-      console.log(
-        "submitted",
-        name,
-        phone,
-        email,
-        address,
-        date,
-        note,
-        functionType,
-        noOfPeople,
-        foodPreference,
-        items
-      );
+      alert("Order submitted.");
+      setName("");
+      setPhone("");
+      setEmail("");
+      setAddress("");
+      setDate("");
+      setNote("");
+      setError("");
+      clearMyArray();
+      setBlackout(false);
+      goBackTOMenu();
     } catch (error) {
       console.error("Error submitting order", error);
+      setError("There was an error submitting your order. Please try again.");
     }
   };
 
@@ -99,14 +97,16 @@ function Checkout({
             type="tel"
             placeholder="Your Phone no. *"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) =>
+              setPhone(e.target.value.replace(/[^\d]/g, "").slice(0, 10))
+            }
           />
           <input
             required
             type="email"
             placeholder="Your email address *"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value.replace(/\s+/g, ""))}
           />
           <textarea
             required
@@ -120,6 +120,7 @@ function Checkout({
             placeholder="Please choose date *"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            min={today}
           />
           <textarea
             placeholder="Your note (optional)"
@@ -130,6 +131,7 @@ function Checkout({
           <button type="submit" className="submit">
             Place order
           </button>
+          {error && <div className="eventError">{error}</div>}
         </form>
       </div>
     </div>
@@ -147,6 +149,7 @@ export function EventDetails({
   foodPreference,
   setFoodPreference,
   onSubmit,
+  eventError,
 }) {
   return (
     <div className={blackout ? "blackout" : "hide"}>
@@ -195,6 +198,7 @@ export function EventDetails({
               <option value="both">Both</option>
             </select>
           </label>
+          {eventError && <span className="eventError">{eventError}</span>}
           <button className="submit" onClick={onSubmit}>
             Submit
           </button>

@@ -81,6 +81,9 @@
       .select {
         cursor: pointer;
       }
+      .eventError {
+        color: red;
+      }
 
       .submit {
         background-color: rgba($primary, 0.2);
