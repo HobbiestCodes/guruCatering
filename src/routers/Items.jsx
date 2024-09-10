@@ -17,7 +17,7 @@ function Items() {
             </div>
             <div className="content">
               <h1>{item.title}</h1>
-              <p>x{item.quantity}</p>
+              {/* <p>x{item.quantity}</p> */}
             </div>
           </div>
         ))}
