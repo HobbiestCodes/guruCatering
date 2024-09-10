@@ -5,6 +5,7 @@ import Card from "./Card";
 import Checkout, { EventDetails } from "../checkout/page";
 import { useArray } from "../../funcs/context";
 import "./styles.scss";
+import Navbar from "../navbar";
 
 function MenuItems({ category, isVeg }) {
   const [menu, setMenu] = useState([]);
@@ -87,6 +88,7 @@ function MenuItems({ category, isVeg }) {
   // console.log(formState.functionType, formState.noOfPeople, formState.foodPreference, menuItems);
   return (
     <div className="parent">
+      <Navbar />
       {showEventDetails ? (
         <EventDetails
           blackout={showEventDetails}

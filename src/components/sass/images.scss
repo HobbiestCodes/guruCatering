@@ -1,28 +1,53 @@
+@import '../sass/global';
+
+
 .img {
   position: absolute;
   width: 6rem;
   border-radius: 100px;
   height: 6rem;
+  @include media(mobile) {
+    width: 5rem;
+    height: 5rem;
+  }
   //   z-index: 12;
 }
 
 .food1 {
   top: 58%;
   left: 27%;
+
+  @include media(mobile) {
+    left: 0%;
+    top: 60%;
+  }
 }
 .food2 {
   top: 58%;
   left: 40%;
+
+  @include media(mobile) {
+    left: 25%;
+    top: 60%;
+  }
 }
 
 .food3 {
   top: 58%;
   left: 53.5%;
+  @include media(mobile) {
+    left: 55%;
+    top: 60%;
+  }
 }
 
 .food4 {
   top: 58%;
   left: 67%;
+  @include media(mobile) {
+    left: 80%;
+    top: 60%;
+  }
 }
 
 .login {

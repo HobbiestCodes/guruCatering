@@ -10,7 +10,7 @@ const tabs = [
   { head: "Home", to: "/" },
   { head: "Veg", to: "/menu", query: { veg: "yes" } },
   { head: "Non Veg", to: "/menu", query: { veg: "no" } },
-  { head: "Menu selection", to: "/menu-selection" },
+  { head: "Menu", to: "/menu", query: { veg: "" } },
   { head: "Corporate box", to: "/corporate-box" },
 ];
 
@@ -46,22 +46,22 @@ function Navbar() {
       transition: {
         duration: 0.6,
         delayChildren: 0.2,
-        staggerChildren: 0.2,
+        // staggerChildren: 0.2,
         ease: "easeInOut",
       },
     },
   };
 
   const item = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0, y: -50 },
     show: { opacity: 1, y: 0 },
   };
 
   return (
-    <motion.nav className="navbar">
-      <motion.div
+    <nav className="navbar">
+      <div
         initial={{ x: -100, opacity: 0 }}
-        whileInView={{ x: 0, opacity: 1 }}
+        animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.7 }}
         viewport={{ once: true }}
         className="nav_logo"
@@ -69,7 +69,7 @@ function Navbar() {
         <Link to="/">
           <img src={logo} alt="logo" />
         </Link>
-      </motion.div>
+      </div>
 
       <AnimatePresence>
         {isAnimating && (
@@ -99,33 +99,33 @@ function Navbar() {
         )}
       </AnimatePresence>
 
-      <motion.ul
+      <ul
         initial="hidden"
         animate="show"
         className="tabs"
         variants={container}
       >
         {tabs.map((tab) => (
-          <motion.li
+          <li
             variants={item}
             key={tab.head}
-            className={isActive(tab) ? "active" : "unselected"}
+  
           >
-            <Link to={{ pathname: tab.to, search: new URLSearchParams(tab.query).toString() }} style={{ color: "black" }}>
+            <Link to={{ pathname: tab.to, search: new URLSearchParams(tab.query).toString()}} style={{ color: "black" }}>
               {tab.head}
             </Link>
-          </motion.li>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
       <motion.div
         className="nav-menu-icon"
         variants={item}
         onClick={() => setIsAnimating((prev) => !prev)}
       >
-        {isAnimating ? <IoClose size={22} /> : <BiMenuAltRight size={22} />}
+        {isAnimating ? <IoClose size={35} /> : <BiMenuAltRight size={35} />}
       </motion.div>
-    </motion.nav>
+    </nav>
   );
 }
 

@@ -3,6 +3,7 @@
 .parent {
   @include fullScreen();
   padding: 1% 1.5%;
+  padding-top: 0px;
   position: relative;
   .lower {
     position: fixed;
@@ -15,9 +16,17 @@
     @include flex(space-between, center);
     padding: 0px 2%;
     z-index: 10;
+
+    @include media(mobile) {
+      @include flex(flex-start, flex-start, column);
+      gap: 2%;
+      height: 13%;
+      padding: 0px 4%;
+    }
     h1 {
       font-weight: 300;
       font-size: 1.6rem;
+      // margin-bottom: 2%;
     }
     .button {
       width: 14rem;
@@ -71,6 +80,7 @@
     @include flex(flex-start, flex-start);
     gap: 1rem;
     position: relative;
+    margin-top: 1%;
     .filter {
       position: absolute;
       right: 0;
@@ -92,6 +102,11 @@
       @include flex(flex-start, flex-start);
       gap: 1rem;
       scrollbar-width: none;
+
+      @include media(mobile) {
+        margin-top: 15%;
+        gap: 3rem;
+      }
     }
 
     .nextPhase {
@@ -135,7 +150,7 @@
       width: 100%;
       font-weight: 600;
       font-size: 1.3rem;
-      text-align: center;
+      text-align: left;
     }
     p {
       text-align: center;
@@ -186,9 +201,11 @@
     height: 6rem;
     background-color: #f8f8f8;
     border: 0.5px solid #eeeeee;
-    @include flex(space-between, center);
+    @include flex(flex-start, center);
     border-radius: 10px;
     padding: 0.3rem;
+    gap: 1rem;
+    margin-top: 1%;
 
     .image {
       width: 25%;
@@ -210,8 +227,8 @@
       gap: 6%;
 
       h1 {
-        font-weight: 400;
-        font-size: 1.3rem;
+        font-weight: 500;
+        font-size: 1.7rem;
         // line-height: 100%;
       }
       p {

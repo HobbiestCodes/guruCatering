@@ -16,8 +16,8 @@ export const updateFood = (
   );
 };
 
-export const updateUser = async (id, name, email, password) => {
-  return adminModel.findByIdAndUpdate({ _id: id }, { name: name, email: email, password: password});
+export const updateUser = async (id, name, email, password, role) => {
+  return adminModel.findByIdAndUpdate({ _id: id }, { name: name, email: email, password: password, role: role});
 };
 
 export async function updateUserFoodPlate(userId, plateId, action) {

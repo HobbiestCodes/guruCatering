@@ -15,6 +15,7 @@ import Items from "./routers/Items.jsx";
 import Navbar from "./components/ui/navbar/index.jsx";
 import Tea from "./components/ui/loader/tea.jsx";
 import Login from "./components/pages/Login.jsx";
+import Admin from "./components/pages/Admin.jsx";
 // import { createBrowserHistory } from "history";
 
 // const ReactRouter = () => {
@@ -66,7 +67,7 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ArrayProvider>
         {/* <ReactRouter /> */}
-        <Navbar />
+        {/* <Navbar /> */}
         <Routes>
           {/* <Route path="*" element={<Tea />} /> */}
           <Route errorElement={<ErrorPage />} path="/" element={<App />} />
@@ -78,7 +79,7 @@ createRoot(document.getElementById("root")).render(
           />
           <Route
             path="/dashboard"
-            element={<Dashboard />}
+            element={<Admin />}
             errorElement={<ErrorPage />}
           />
           <Route

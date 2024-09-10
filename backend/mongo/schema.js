@@ -14,6 +14,11 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 8,
+  },
+  role: {
+    type: String,
+    required: false,
+    default: "admin",
   }
 });
 
@@ -142,6 +147,10 @@ const Orders = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    required: false,
+  }
 });
 
 export const orderModel = mongoose.model("orders", Orders);

@@ -10,9 +10,14 @@
   padding: 8px 5% 8px 4%;
   background-color: white;
   backdrop-filter: blur(4px);
+  // background-color: red;
   .nav_logo {
     width: 10%;
     height: 3rem;
+    @include media(mobile) {
+      width: 30%;
+      height: 4rem;
+    }
     img {
       width: 95%;
       height: 95%;
@@ -59,6 +64,8 @@
     gap: 1.3rem;
     a {
       text-decoration: none;
+      transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
     }
     li {
       font-size: 1.3rem;
@@ -73,7 +80,7 @@
         width: 0%;
         height: 100%;
         z-index: -1;
-        border-bottom: 2px solid $primary;
+        border-bottom: 2px solid $black;
         transition: 0.3s all cubic-bezier(0.68, -0.55, 0.265, 1.55);
       }
       &.unselected {
@@ -84,10 +91,9 @@
       }
       &.active {
         color: $primary;
-        &::before {
-          width: 100%;
-        }
+        font-weight: 400;
       }
+
       &:hover {
         color: $primary;
         &::before {

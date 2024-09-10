@@ -154,10 +154,11 @@ export async function createUserFoodPlates(userId, plates) {
   }
 }
 
-export async function Catogery(name) {
+export async function Catogery(name, image) {
   try {
     const catogery = new catogeryModel({
       name: name,
+      image: image,
     });
     await catogery.save();
   } catch (e) {

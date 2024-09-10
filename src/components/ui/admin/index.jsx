@@ -22,10 +22,12 @@ function Dashboard() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[2].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
-  // console.log();
   
-  const { user: currentUser } = useAuth();
-  const navigate = useNavigate();
+  // const { user: currentUser } = useAuth();
+  // const navigate = useNavigate();
+
+  // console.log(currentUser);
+  
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -34,16 +36,17 @@ function Dashboard() {
   const [password, setPassword] = useState("");
   const [price, setPrice] = useState("");
   const [rating, setRating] = useState("");
-  const [isVeg, setIsVeg] = useState(false);
+  const [isVeg, setIsVeg] = useState();
   const [description, setDescription] = useState("");
   const [catogery, setCatogery] = useState("common");
   const [catogeries, setCatogeries] = useState("");
   const [createCatogery, setCreateCatogery] = useState(false);
 
   const [admin, setAdmin] = useState(false);
+  const [role, setRole] = useState('admin');
+
   const [image, setImage] = useState("");
   const [key, setKey] = useState("");
-
 
 
   const [create, setCreate] = useState(false);
@@ -53,7 +56,7 @@ function Dashboard() {
   const keys =
     data && data.length > 0
       ? Object.keys(data[0]).filter(
-          (key) => key !== "_id" && key !== "__v" && key !== "orders"
+          (key) => key !== "_id" && key !== "__v" && key !== "orders" && key !== "status"
         )
       : [];
 
@@ -142,6 +145,7 @@ function Dashboard() {
       name: name,
       email: email,
       password: password,
+      role: role,
     });
     console.log("User updated:", response.data);
     setVisible(false);
@@ -170,6 +174,7 @@ function Dashboard() {
       },
       data: {
         id: id,
+        image: image,
         name: catogery,
       },
     };
@@ -226,10 +231,17 @@ function Dashboard() {
     PostImage(key);
   }
 
-  // if (currentUser && currentUser.role !== "admin") return navigate("/");
+  const handleStatus = async (id, value) => {
+      const requst = await axios.put(`http://localhost:8080/status`, {
+        id: id,
+        status: value,
+      })
+
+      console.log(requst.data)
+  }
 
   return (
-    <div className="container">
+    <div className="container" style={visible || activeTab==='Foods' ? {marginTop: '0'} : {marginTop: '2%'} }>
       {createCatogery ? (
         <div className="visible userEd create">
           <h1>
@@ -242,6 +254,24 @@ function Dashboard() {
             />
           </h1>
           <form className="form">
+          {image !== "" ? (
+                  <div className="imgCont">
+                    {create ? (
+                      <h3>Image uploaded Successfully!!</h3>
+                    ) : (
+                      <input
+                        onChange={UploadImage}
+                        style={{ width: "60%", height: "6rem" }}
+                        accept="image/*"
+                        type="file"
+                      />
+                    )}
+                    <img src={image} alt="uploaded" className="uploadedImage" />
+                  </div>
+                ) : (
+                  <input onChange={UploadImage} accept="image/*" type="file" />
+                )}
+
             <input
               type="text"
               value={catogery}
@@ -264,11 +294,13 @@ function Dashboard() {
                   className="icons"
                   onClick={() => {
                     setCreate(false), setUpdate(false), setVisible(false);
-                    setName(""),
+                      setName(""),
                       setPrice(""),
                       setRating(""),
-                      setIsVeg(false),
+                      setIsVeg(''),
                       setDescription("");
+                      setImage(""),
+                      setCatogery("");
                   }}
                 />
               </h1>
@@ -299,9 +331,9 @@ function Dashboard() {
                   value={isVeg}
                   onChange={(e) => setIsVeg(e.target.value)}
                 >
-                  <option disabled>Veg?</option>
-                  <option>Yes</option>
-                  <option>No</option>
+                  <option value="">Veg?</option>
+                  <option value={true}>Yes</option>
+                  <option value={false}>No</option>
                 </select>
                 <select
                   name="isVeg"
@@ -387,6 +419,14 @@ function Dashboard() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <select 
+                    onChange={(e) => setRole(e.target.value)}
+                    defaultValue={role}
+                    >
+                      {/* <option>{role}</option> */}
+                      <option value="admin">Admin</option>
+                      <option value="superAdmin">Super admin</option>
+                    </select>
                     {update && (
                       <button
                         style={{ cursor: "pointer" }}
@@ -502,7 +542,7 @@ function Dashboard() {
                           <>
                             <tr>
                               {Object.keys(item)
-                                .filter((key) => key !== "_id" && key !== "__v")
+                                .filter((key) => key !== "_id" && key !== "__v" && key !== "status")
                                 .map((key) => {
                                   return (
                                     <>
@@ -550,44 +590,47 @@ function Dashboard() {
                                     <FaSpinner className="spinner" />
                                   ) : (
                                     <>
-                                      <FaRegEdit
-                                        className="edit"
-                                        size={18}
-                                        onClick={() => {
-                                          {
-                                            setVisible(true);
-                                            setUpdate(true);
-                                            setAdmin(true);
+                                    <FaRegEdit
+                                      className="edit"
+                                      size={18}
+                                      onClick={() => {
+                                        {
+                                          setVisible(true);
+                                          setUpdate(true);
+                                          setAdmin(true);
 
-                                            update
-                                              ? console.log("nalla")
-                                              : handleEdit("edit", item._id),
-                                              setId(item._id);
-                                          }
-                                        }}
-                                      />
-                                      <FaRegTrashAlt
-                                        className="delete"
-                                        size={18}
-                                        onClick={() => {
-                                          handleEdit("delete", item._id);
-                                        }}
-                                      />
-                                    </>
-                                  )}
+                                          update
+                                            ? console.log("nalla")
+                                            : handleEdit("edit", item._id),
+                                            setId(item._id);
+                                        }
+                                      }}
+                                    />
+                                    <FaRegTrashAlt
+                                      className="delete"
+                                      size={18}
+                                      onClick={() => {
+                                        handleEdit("delete", item._id);
+                                      }}
+                                    />
+                                  </>
+                                  ) 
+                                  }
                                 </div>
                               ) : (
                                 <></>
                               )}
                               {activeTab === "Orders" && (
-                                <select>
-                                <option value="">Select Status</option>
+                                <select 
+                                onChange={(e) => {handleStatus(item._id, e.target.value)}}
+                                defaultValue={item.status || 'status'}
+                                >
                                 <option value="ordered">Ordered</option>
                                 <option value="contact">Contact</option>
                                 <option value="approved">Approved</option>
-                                <option value="not">Not Approved</option>
-                                <option value="payment">Payment collected</option>
-                                <option value="done">Completed</option>
+                                <option value="notApproved">Not Approved</option>
+                                <option value="paymentCollected">Payment collected</option>
+                                <option value="completed">Completed</option>
                               </select>)
                               }
                             </tr>

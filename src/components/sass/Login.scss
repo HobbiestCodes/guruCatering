@@ -51,6 +51,9 @@ form {
         font-weight: 400;
         opacity: 0;
         color: $danger;
+        &.error {
+          opacity: 1;
+        }
     }
   .un {
     width: 76%;
@@ -85,7 +88,7 @@ form {
     width: fit-content;
     height: fit-content;
     cursor: pointer;
-    border-radius: 5em;
+    border-radius: 20px;
     color: #fff;
     background: linear-gradient(to right, rgb(255, 180, 40), rgb(255, 206, 116));
     border: 0;

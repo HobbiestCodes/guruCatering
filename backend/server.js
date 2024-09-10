@@ -2,7 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import session from "express-session";
-import passport from "passport";
 import MongoStore from "connect-mongo";
 import cors from "cors";
 import "./passport.js";
@@ -11,22 +10,19 @@ import {
   readById,
   readFood,
   readOrders,
-  readUserOrdersById,
-  readUsers,
   readCatogery,
   readAllFoods,
 } from "./mongo/read.js";
 import {
   CreateFood,
-  createFoodOrders,
   Catogery,
   createOrders,
   createAdmins,
 } from "./mongo/create.js";
 
-import { deleteData, removeUserFoodPlate } from "./mongo/delete.js";
+import { deleteData } from "./mongo/delete.js";
 import { updateFood, updateUser } from "./mongo/update.js";
-import foodModel, { adminModel } from "./mongo/schema.js";
+import foodModel, { adminModel, orderModel } from "./mongo/schema.js";
 
 dotenv.config();
 
@@ -51,7 +47,7 @@ const connection = () => {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     credentials: true,
   })
 );
@@ -82,9 +78,6 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.get("/", (req, res) => {
   res.redirect("http://localhost:5173");
 });
@@ -99,15 +92,50 @@ app.post('/admins/new', async function(req, res) {
   }
 })
 
+
+app.get('/admins/dashboard', async function(req, res) {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'Unauthorized', success: false });
+  }
+  const user = await adminModel.findById(req.session.userId);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found', success: false });
+  }
+  console.log(req.session.userId);
+  return res.status(200).json({ message: 'OK', success: true, data: user });
+
+}); 
+
+// Error handling middleware (optional)
+
+
+app.post('/admins/login', async function(req, res) {
+  const { email, password } = req.body;
+  const cred = await adminModel.find({email: email, password: password });
+
+  if (cred.length === 0) {
+    return res.status(200).json({ message: "Not found", success: false });
+  }
+
+  req.session.userId = cred._id;
+  return res.status(200).json({
+    user: { id: cred._id, role: cred.role, email: cred.email },
+    message: "OK",
+    success: true
+  });
+
+});
+
 app.get("/catogery", async (req, res) => {
   const response = await readCatogery();
-  res.send(response);
+  return res.send(response);
 });
 
 app.post("/catogery/create", async (req, res) => {
   const data = req.body;
+  const image = data.image;
   const lowerCase = data.name.toLowerCase();
-  const response = await Catogery(lowerCase);
+  const response = await Catogery(lowerCase, image);
   res.send(response);
 });
 
@@ -157,8 +185,8 @@ app.post("/delete", async (req, res) => {
   });
 });
 app.put("/users/update", async (req, res) => {
-  const { id, name, email, password } = req.body;
-  const response = await updateUser(id, name, email, password);
+  const { id, name, email, password, role } = req.body;
+  const response = await updateUser(id, name, email, password, role);
   res.send({
     message: { response },
   });
@@ -208,68 +236,15 @@ app.post("/addOrder", async (req, res) => {
   res.send({ message: "Added successfully...!" });
 });
 
-app.post("/create-food-order", async (req, res) => {
-  const { userId, address, phoneNumber, orders, date } = req.body;
-  // console.log(userId, address, phoneNumber, orders, date);
-
-  try {
-    if (
-      !userId ||
-      !address ||
-      !phoneNumber ||
-      !Array.isArray(orders) ||
-      !date
-    ) {
-      return res.status(400).send({
-        message: "Invalid request data",
-      });
-    }
-
-    const result = await createFoodOrders(
-      userId,
-      address,
-      phoneNumber,
-      orders,
-      date
-    );
-    // console.log(result);
-
-    if (result.status == 200) {
-      res.status(200).send({
-        message: result.message,
-      });
-      await removeUserFoodPlate(userId);
-    }
-    if (result.status == 201) {
-      res.status(200).send({
-        message: result.message,
-      });
-    }
-    if (result.status == 500) {
-      res.status(500).send({
-        message: result.message,
-      });
-    }
-  } catch (error) {
-    res.status(500).send({
-      message: "Failed to place food order",
-      error: error.message,
-    });
-  }
-});
-
-app.post("/user-food-orders", async (req, res) => {
-  const { userId } = req.body;
-  console.log("user-food-orders", userId);
-
-  const food = await readUserOrdersById(userId);
-
-  res.send(food);
-});
-
 app.get("/Orders", async (req, res) => {
   const orders = await readOrders();
   res.send(orders);
 });
+
+app.put('/status', async (req, res) => {
+  const { id, status } = req.body;
+  await orderModel.updateOne({ _id: id }, { $set: { status: status } });
+  res.send({ message: "Updated successfully" });
+})
 
 connection();

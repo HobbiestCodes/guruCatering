@@ -100,7 +100,7 @@ function Render() {
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Canvas>
-        <ScrollControls pages={2} damping={1}>
+        <ScrollControls pages={2} damping={1} style={{scrollbarWidth: 'none'}}>
           <CameraAnimation />
           <Simple />
           <Scroll html>
@@ -109,18 +109,7 @@ function Render() {
             </div>
 
             <div style={{ width: "100vw", position: "relative" }}>
-              {/* <Modal
-                status={status}
-                isOpen={isModalOpen}
-                itemsToShow={itemsToShow}
-                onClose={handleClose}
-                isOrderPlaced={isOrderPlaced}
-                setIsOrderPlaced={setIsOrderPlaced}
-                triggerFormSubmit={triggerFormSubmit}
-                items={itemsToShow}
-                setItemsToShow={setItemsToShow}
-              > */}
-              <AnimatePresence>
+              {/* <AnimatePresence>
                 {isOrderPlaced ? (
                   <motion.form
                     id="form"
@@ -221,7 +210,7 @@ function Render() {
                     </button>
                   </div>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
               {/* </Modal> */}
               <Selection />
             </div>
