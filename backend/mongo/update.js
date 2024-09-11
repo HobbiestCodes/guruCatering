@@ -7,11 +7,12 @@ export const updateFood = (
   price,
   image,
   rating,
-  isVeg
+  isVeg,
+  catogery,
 ) => {
   return foodModel.findOneAndUpdate(
     { _id: id },
-    { name, description, price, image, rating, isVeg },
+    { name, description, price, image, rating, isVeg, catogery },
     { new: true }
   );
 };

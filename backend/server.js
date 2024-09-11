@@ -140,15 +140,16 @@ app.post("/catogery/create", async (req, res) => {
 });
 
 app.put("/update", async (req, res) => {
-  const { id, name, description, price, image, rating, isVeg } = req.body;
-  const response = await updateFood(
+  const { id, name, description, price, image, rating, isVeg, catogery } = req.body;
+  await updateFood(
     id,
     name,
     description,
     price,
     image,
     rating,
-    isVeg
+    isVeg,
+    catogery
   );
   res.send({
     message: "Data updated successfully",
@@ -193,8 +194,8 @@ app.put("/users/update", async (req, res) => {
 });
 
 app.post("/createFood", async (req, res) => {
-  const { name, description, price, image, rating, isVeg } = req.body;
-  await CreateFood(name, description, price, image, rating, isVeg);
+  const { name, description, price, image, rating, isVeg, catogery } = req.body;
+  await CreateFood(name, description, price, image, rating, isVeg, catogery);
   res.send({
     message: "Data added successfully",
   });

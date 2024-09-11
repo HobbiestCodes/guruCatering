@@ -11,7 +11,7 @@ export async function CreateFood(
   image,
   rating,
   isVeg,
-  isAvailable
+  catogery
 ) {
   try {
     const foods = new foodModel({
@@ -21,7 +21,7 @@ export async function CreateFood(
       image: image,
       rating: rating,
       isVeg: isVeg,
-      isAvailable: isAvailable,
+      catogery: catogery,
     });
     await foods.save();
   } catch (e) {

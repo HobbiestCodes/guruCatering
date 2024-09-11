@@ -14,7 +14,7 @@ import axios from "axios";
 import { GoListUnordered } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 
-function Dashboard() {
+function Dashboard({logout}) {
   const tabs = [
     { title: "Admins", icon: RiAdminLine },
     { title: "Foods", icon: IoFastFoodOutline },
@@ -22,12 +22,6 @@ function Dashboard() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[2].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
-  
-  // const { user: currentUser } = useAuth();
-  // const navigate = useNavigate();
-
-  // console.log(currentUser);
-  
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -38,7 +32,7 @@ function Dashboard() {
   const [rating, setRating] = useState("");
   const [isVeg, setIsVeg] = useState();
   const [description, setDescription] = useState("");
-  const [catogery, setCatogery] = useState("common");
+  const [catogery, setCatogery] = useState("");
   const [catogeries, setCatogeries] = useState("");
   const [createCatogery, setCreateCatogery] = useState(false);
 
@@ -103,15 +97,12 @@ function Dashboard() {
       setName(response.data.name);
       setEmail(response.data.email);
       setPassword(response.data.password);
-      // console.log(url);
-      
       setPrice(response.data.price);
       setRating(response.data.rating);
       setIsVeg(response.data.isVeg);
       setImage(response.data.image);
       setDescription(response.data.description);
       setCatogery(response.data.catogery);
-      // console.log(response.data);
 
       setLoading(false);
       // setVisible(true)
@@ -336,10 +327,10 @@ function Dashboard() {
                   <option value={false}>No</option>
                 </select>
                 <select
-                  name="isVeg"
+                  name="catogery"
                   value={catogery}
+                  defaultValue={catogery}
                   onChange={(e) => setCatogery(e.target.value)}
-                  defaultValue={"Catogery"}
                 >
                   <option>Catogery</option>
                   {catogeries.length > 0 &&
@@ -486,7 +477,7 @@ function Dashboard() {
           </div>
           <div className="bottom">
             <div className="logout">
-              <button>
+              <button onClick={() => logout()}>
                 <IoLogOutOutline style={{ transform: "rotate(180deg)" }} />{" "}
                 Logout
               </button>
