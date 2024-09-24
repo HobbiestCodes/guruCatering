@@ -102,7 +102,7 @@ export function Simple(props) {
         receiveShadow
         material={materials.bg}
         position={[-0.6, -0.5, -2]}
-        scale={[-5, -8.614, -1.223]}
+        scale={[-9, -8.614, -1.223]}
       />
 
       <group position={[2.329, 0.013, -0.831]} scale={0.018} ref={chair3}>
@@ -267,7 +267,7 @@ initial={{ rotate: 360, y: -300, opacity: 0 }}
           material={materials.dull_mat}
         />
       </group>
-      <mesh receiveShadow geometry={nodes.Plane001.geometry} material={materials.bg} position={[-1, -0.5, 0.269]} scale={[-5, -5.979, -2.552]} />
+      <mesh receiveShadow geometry={nodes.Plane001.geometry} material={materials.bg} position={[-1, -0.5, 0.269]} scale={[-9, -5.979, -2.552]} />
       <group position={[-0.289, 3.774, -3.656]} rotation={[-Math.PI / 2, Math.PI / 2, 0]} scale={[0.035, 0.035, 0.044]}>
         <motion.mesh 
         castShadow receiveShadow

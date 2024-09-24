@@ -6,8 +6,7 @@ export const useArray = () => useContext(ArrayContext);
 
 export const ArrayProvider = ({ children }) => {
   const [myArray, setMyArray] = useState([]);
-  console.log(myArray);
-  
+  // console.log(myArray);
 
   useEffect(() => {
     const savedArray = JSON.parse(localStorage.getItem("myArray")) || [];
@@ -38,6 +37,7 @@ export const ArrayProvider = ({ children }) => {
       return prevArray.filter((item) => item.id !== id);
     });
   };
+  const clearMyArray = () => setMyArray([]);
 
   const isInArray = (id) => {
     return myArray.some((item) => item.id === id);
@@ -45,7 +45,7 @@ export const ArrayProvider = ({ children }) => {
 
   return (
     <ArrayContext.Provider
-      value={{ myArray, addToArray, removeFromArray, isInArray }}
+      value={{ myArray, addToArray, removeFromArray, clearMyArray, isInArray }}
     >
       {children}
     </ArrayContext.Provider>

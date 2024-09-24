@@ -46,10 +46,10 @@ function Card({ items }) {
             <img src={item.image} alt="image" />
           </div>
           <div className="content">
-            <h1>{item.name}</h1>
-            <p>x{quantities[item.id] || 1}</p>
+            <h1>{item.title}</h1>
+            {/* <p>x{quantities[item.id] || 1}</p> */}
           </div>
-          <div className="incre">
+          {/* <div className="incre">
             <div
               className="modal-item-btn"
               onClick={() => handleDecrement(item.id)}
@@ -62,7 +62,7 @@ function Card({ items }) {
             >
               <FaPlus size={20} />
             </div>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

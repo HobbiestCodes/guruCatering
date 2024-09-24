@@ -2,7 +2,7 @@
 
 .items {
     @include fullScreen($h: auto);
-    padding: 2%;
+    padding: 1% 2%;
     overflow-x: hidden;
 
     .crdParent {
@@ -12,10 +12,7 @@
 
             h1 {
                 font-weight: 600;
-                font-size: 1.3rem;
-            }
-            p {
-                font-size: 1.2rem;
+                font-size: 1.7rem;
             }
         }
     }

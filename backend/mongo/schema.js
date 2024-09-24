@@ -1,31 +1,28 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  googleId: {
-    type: String,
-    required: true,
-    // unique: true
-  },
+const adminSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   email: {
     type: String,
     required: true,
     unique: true,
   },
-  profile: {
+  password: {
     type: String,
     required: true,
+    minlength: 8,
   },
   role: {
     type: String,
-    default: "user",
-  },
+    required: false,
+    default: "admin",
+  }
 });
 
-export const userModel = new mongoose.model("users", userSchema);
+export const adminModel = new mongoose.model("admins", adminSchema);
 
 const foodSchema = new mongoose.Schema({
   name: {
@@ -150,6 +147,10 @@ const Orders = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    required: false,
+  }
 });
 
 export const orderModel = mongoose.model("orders", Orders);

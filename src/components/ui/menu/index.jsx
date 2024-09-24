@@ -5,8 +5,9 @@ import Card from "./Card";
 import Checkout, { EventDetails } from "../checkout/page";
 import { useArray } from "../../funcs/context";
 import "./styles.scss";
+import Navbar from "../navbar";
 
-function MenuItems({ category }) {
+function MenuItems({ category, isVeg }) {
   const [menu, setMenu] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(category || "");
@@ -14,12 +15,20 @@ function MenuItems({ category }) {
   const [active, setActive] = useState(false);
   const [blackout, setBlackout] = useState(false);
   const [showEventDetails, setShowEventDetails] = useState(true);
+  const [eventError, setEventError] = useState("");
 
   const [formState, setFormState] = useState({
     functionType: "",
     noOfPeople: "",
-    foodPreference: "",
+    foodPreference: (isVeg === "yes" ? "veg" : "non-veg") ?? "",
   });
+
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      foodPreference: isVeg === "yes" ? "veg" : "non-veg",
+    }));
+  }, [isVeg]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -49,11 +58,12 @@ function MenuItems({ category }) {
       let url = "http://localhost:8080/Foods";
       if (selectedCategory) url += `/${selectedCategory}`;
       const { data } = await axios.get(url);
+      // console.log(data);
+
       const filteredItems = filterMenuItems(data);
       setMenuItems(filteredItems);
     } catch (error) {
       console.error("Failed to fetch menu items", error);
-      // Consider adding user feedback for errors
     }
   };
 
@@ -68,20 +78,17 @@ function MenuItems({ category }) {
   const handleFormSubmit = () => {
     const { functionType, noOfPeople, foodPreference } = formState;
     if (!functionType.trim() || !noOfPeople.trim() || !foodPreference.trim()) {
-      return;
+      return setEventError("All fields are required");
     }
-    console.log(formState);
+    setEventError("");
     setBlackout(false);
     setShowEventDetails(false);
   };
 
-  const handleFormStateChange = (e) => {
-    const { name, value } = e.target;
-    setFormState((prevState) => ({ ...prevState, [name]: value }));
-  };
-
+  // console.log(formState.functionType, formState.noOfPeople, formState.foodPreference, menuItems);
   return (
     <div className="parent">
+      <Navbar />
       {showEventDetails ? (
         <EventDetails
           blackout={showEventDetails}
@@ -99,6 +106,7 @@ function MenuItems({ category }) {
             setFormState((prev) => ({ ...prev, foodPreference: value }))
           }
           onSubmit={handleFormSubmit}
+          eventError={eventError}
         />
       ) : (
         <>
@@ -108,6 +116,7 @@ function MenuItems({ category }) {
             functionType={formState.functionType}
             noOfPeople={formState.noOfPeople}
             foodPreference={formState.foodPreference}
+            goBackTOMenu={() => setActive(!active)}
             items={myArray}
           />
           <div className="lower">

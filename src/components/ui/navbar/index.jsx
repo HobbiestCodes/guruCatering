@@ -1,12 +1,43 @@
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { BiMenuAltRight } from "react-icons/bi";
-import Login from "../../funcs/Logged";
-import "./styles.scss";
-import logo from "/logo.png";
+import logo from "/logo.png"; // Ensure the path is correct
 import { IoClose } from "react-icons/io5";
+import { BiMenuAltRight } from "react-icons/bi";
+import "./styles.scss";
+
+const tabs = [
+  { head: "Home", to: "/" },
+  { head: "Veg", to: "/menu", query: { veg: "yes" } },
+  { head: "Non Veg", to: "/menu", query: { veg: "no" } },
+  { head: "Menu", to: "/menu", query: { veg: "" } },
+  { head: "Corporate box", to: "/corporate-box" },
+];
 
 function Navbar() {
+  const location = useLocation();
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Helper to check if the current location matches the tab
+  const isActive = (tab) => {
+    const { pathname, search } = location;
+    const queryParams = new URLSearchParams(search);
+
+    // Check for path match
+    const pathMatch = pathname === tab.to;
+
+    // Check for query parameter match
+    if (tab.query) {
+      for (const [key, value] of Object.entries(tab.query)) {
+        if (queryParams.get(key) !== value) {
+          return false;
+        }
+      }
+    }
+
+    return pathMatch;
+  };
+
   const container = {
     hidden: { opacity: 0, y: -50 },
     show: {
@@ -14,119 +45,87 @@ function Navbar() {
       y: 0,
       transition: {
         duration: 0.6,
-        delayChildren: 2,
-        staggerChildren: 0.2,
+        delayChildren: 0.2,
+        // staggerChildren: 0.2,
         ease: "easeInOut",
       },
     },
   };
 
   const item = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0, y: -50 },
     show: { opacity: 1, y: 0 },
   };
 
-  const tabs = ["Home", "Veg", "Non Veg", "Menu selection", "Corporate box"];
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  const [isAnimating, setIsAnimating] = useState(false);
-  // console.log(activeTab);
-
-  useEffect(() => {
-    if (isAnimating) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
-    } else {
-      document.body.style.overflow = "auto"; // Enable scrolling
-    }
-
-    // Cleanup function to reset the overflow when component unmounts
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isAnimating]);
-
   return (
-    <motion.nav className="navbar">
-      <motion.div
-        initial={{
-          x: -100,
-          opacity: 0,
-        }}
-        whileInView={{
-          x: 0,
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: 1.7,
-        }}
+    <nav className="navbar">
+      <div
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 1.7 }}
         viewport={{ once: true }}
         className="nav_logo"
       >
-        <img src={logo} alt="logo" />
-      </motion.div>
+        <Link to="/">
+          <img src={logo} alt="logo" />
+        </Link>
+      </div>
 
       <AnimatePresence>
         {isAnimating && (
           <motion.ul
             initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.3 }}
             exit={{ x: 400, opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="responsive-nav"
           >
             {tabs.map((tab, i) => (
-              // <Link to={`/${tab.toLowerCase()}`}>
               <motion.li
                 variants={item}
                 initial={{ x: 400 }}
                 animate={{ x: 0 }}
                 exit={{ x: 400 }}
                 transition={{ delay: 0.2 * i }}
-                key={tab}
-                className={`${activeTab === tab ? `active` : "unselected"}`}
-                onClick={() => {
-                  setActiveTab(tab);
-                }}
+                key={tab.head}
+                className={isActive(tab) ? "active" : "unselected"}
               >
-                {tab}
+                <Link to={{ pathname: tab.to, search: new URLSearchParams(tab.query).toString() }} style={{ color: "black" }}>
+                  {tab.head}
+                </Link>
               </motion.li>
-              // </Link>
             ))}
           </motion.ul>
         )}
       </AnimatePresence>
-      <motion.ul
+
+      <ul
         initial="hidden"
         animate="show"
         className="tabs"
         variants={container}
       >
         {tabs.map((tab) => (
-          // <Link to={`/${tab.toLowerCase()}`}>
-          <motion.li
+          <li
             variants={item}
-            key={tab}
-            className={`${activeTab === tab ? `active` : "unselected"}`}
-            onClick={() => {
-              setActiveTab(tab);
-            }}
+            key={tab.head}
+  
           >
-            {tab}
-          </motion.li>
-          // </Link>
+            <Link to={{ pathname: tab.to, search: new URLSearchParams(tab.query).toString()}} style={{ color: "black" }}>
+              {tab.head}
+            </Link>
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
-      <motion.li
+      <motion.div
         className="nav-menu-icon"
         variants={item}
-        onClick={() => setIsAnimating((toggle) => !toggle)}
+        onClick={() => setIsAnimating((prev) => !prev)}
       >
-        {isAnimating ? <IoClose size={22} /> : <BiMenuAltRight size={22} />}
-      </motion.li>
-
-      {/* </div> */}
-    </motion.nav>
+        {isAnimating ? <IoClose size={35} /> : <BiMenuAltRight size={35} />}
+      </motion.div>
+    </nav>
   );
 }
 

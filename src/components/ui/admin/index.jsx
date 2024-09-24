@@ -14,7 +14,7 @@ import axios from "axios";
 import { GoListUnordered } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 
-function Dashboard() {
+function Dashboard({logout}) {
   const tabs = [
     { title: "Admins", icon: RiAdminLine },
     { title: "Foods", icon: IoFastFoodOutline },
@@ -22,27 +22,27 @@ function Dashboard() {
   ];
   const [activeTab, setActiveTab] = useState(tabs[2].title);
   const { data = [], isLoading, error, reFetch } = readData(activeTab);
-  // console.log();
-
-  const { user: currentUser } = useAuth();
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [price, setPrice] = useState("");
   const [rating, setRating] = useState("");
-  const [isVeg, setIsVeg] = useState(false);
+  const [isVeg, setIsVeg] = useState();
   const [description, setDescription] = useState("");
-  const [catogery, setCatogery] = useState("common");
+  const [catogery, setCatogery] = useState("");
   const [catogeries, setCatogeries] = useState("");
   const [createCatogery, setCreateCatogery] = useState(false);
+
+  const [admin, setAdmin] = useState(false);
+  const [role, setRole] = useState('admin');
 
   const [image, setImage] = useState("");
   const [key, setKey] = useState("");
 
-  const [user, setUser] = useState(false);
-  const [role, setRole] = useState("");
+
   const [create, setCreate] = useState(false);
   const [id, setId] = useState("");
   const [update, setUpdate] = useState(false);
@@ -50,16 +50,12 @@ function Dashboard() {
   const keys =
     data && data.length > 0
       ? Object.keys(data[0]).filter(
-          (key) => key !== "_id" && key !== "__v" && key !== "orders"
+          (key) => key !== "_id" && key !== "__v" && key !== "orders" && key !== "status"
         )
       : [];
 
   useEffect(() => {
     reFetch();
-    if (activeTab === "Admins") {
-      setUser(true);
-      data[0]?.role ? setRole(data[0].role) : "";
-    }
   }, [activeTab]);
 
   const handleEdit = async (action, id) => {
@@ -99,13 +95,14 @@ function Dashboard() {
       });
 
       setName(response.data.name);
+      setEmail(response.data.email);
+      setPassword(response.data.password);
       setPrice(response.data.price);
       setRating(response.data.rating);
       setIsVeg(response.data.isVeg);
       setImage(response.data.image);
       setDescription(response.data.description);
       setCatogery(response.data.catogery);
-      // console.log(response.data);
 
       setLoading(false);
       // setVisible(true)
@@ -136,6 +133,9 @@ function Dashboard() {
   const handleUserUpdate = async (id) => {
     const response = await axios.put(`http://localhost:8080/users/update`, {
       id: id,
+      name: name,
+      email: email,
+      password: password,
       role: role,
     });
     console.log("User updated:", response.data);
@@ -165,6 +165,7 @@ function Dashboard() {
       },
       data: {
         id: id,
+        image: image,
         name: catogery,
       },
     };
@@ -221,10 +222,17 @@ function Dashboard() {
     PostImage(key);
   }
 
-  // if (currentUser && currentUser.role !== "admin") return navigate("/");
+  const handleStatus = async (id, value) => {
+      const requst = await axios.put(`http://localhost:8080/status`, {
+        id: id,
+        status: value,
+      })
+
+      console.log(requst.data)
+  }
 
   return (
-    <div className="container">
+    <div className="container" style={visible || activeTab==='Foods' ? {marginTop: '0'} : {marginTop: '2%'} }>
       {createCatogery ? (
         <div className="visible userEd create">
           <h1>
@@ -237,6 +245,24 @@ function Dashboard() {
             />
           </h1>
           <form className="form">
+          {image !== "" ? (
+                  <div className="imgCont">
+                    {create ? (
+                      <h3>Image uploaded Successfully!!</h3>
+                    ) : (
+                      <input
+                        onChange={UploadImage}
+                        style={{ width: "60%", height: "6rem" }}
+                        accept="image/*"
+                        type="file"
+                      />
+                    )}
+                    <img src={image} alt="uploaded" className="uploadedImage" />
+                  </div>
+                ) : (
+                  <input onChange={UploadImage} accept="image/*" type="file" />
+                )}
+
             <input
               type="text"
               value={catogery}
@@ -259,11 +285,13 @@ function Dashboard() {
                   className="icons"
                   onClick={() => {
                     setCreate(false), setUpdate(false), setVisible(false);
-                    setName(""),
+                      setName(""),
                       setPrice(""),
                       setRating(""),
-                      setIsVeg(false),
+                      setIsVeg(''),
                       setDescription("");
+                      setImage(""),
+                      setCatogery("");
                   }}
                 />
               </h1>
@@ -294,15 +322,15 @@ function Dashboard() {
                   value={isVeg}
                   onChange={(e) => setIsVeg(e.target.value)}
                 >
-                  <option disabled>Veg?</option>
-                  <option>Yes</option>
-                  <option>No</option>
+                  <option value="">Veg?</option>
+                  <option value={true}>Yes</option>
+                  <option value={false}>No</option>
                 </select>
                 <select
-                  name="isVeg"
+                  name="catogery"
                   value={catogery}
+                  defaultValue={catogery}
                   onChange={(e) => setCatogery(e.target.value)}
-                  defaultValue={"Catogery"}
                 >
                   <option>Catogery</option>
                   {catogeries.length > 0 &&
@@ -350,9 +378,58 @@ function Dashboard() {
                 )}
               </form>
             </div>
-          ) : (
-            ""
-          )}
+          ) : activeTab==="Admins" ? (
+              <div className="visible userEd">
+                <h1>Update Admin Data <IoCloseOutline
+                  className="icons"
+                  onClick={() => {
+                    setCreate(false), setUpdate(false), setVisible(false);
+                    setName(""),
+                      setPrice(""),
+                      setRating(""),
+                      setIsVeg(false),
+                      setDescription("");
+                  }}
+                /></h1>
+                <form className="form">
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <select 
+                    onChange={(e) => setRole(e.target.value)}
+                    defaultValue={role}
+                    >
+                      {/* <option>{role}</option> */}
+                      <option value="admin">Admin</option>
+                      <option value="superAdmin">Super admin</option>
+                    </select>
+                    {update && (
+                      <button
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleUserUpdate(id)}
+                      >
+                        Update Admin
+                      </button>
+                    )}
+  
+                </form>
+              </div>
+          ) : ""}
         </>
       ) : (
         ""
@@ -400,7 +477,7 @@ function Dashboard() {
           </div>
           <div className="bottom">
             <div className="logout">
-              <button>
+              <button onClick={() => logout()}>
                 <IoLogOutOutline style={{ transform: "rotate(180deg)" }} />{" "}
                 Logout
               </button>
@@ -452,7 +529,7 @@ function Dashboard() {
                           <>
                             <tr>
                               {Object.keys(item)
-                                .filter((key) => key !== "_id" && key !== "__v")
+                                .filter((key) => key !== "_id" && key !== "__v" && key !== "status")
                                 .map((key) => {
                                   return (
                                     <>
@@ -507,46 +584,49 @@ function Dashboard() {
                                     <FaSpinner className="spinner" />
                                   ) : (
                                     <>
-                                      <FaRegEdit
-                                        className="edit"
-                                        size={18}
-                                        onClick={() => {
-                                          {
-                                            setVisible(true);
-                                            setUpdate(true);
-                                            update
-                                              ? console.log("nalla")
-                                              : handleEdit("edit", item._id),
-                                              setId(item._id);
-                                          }
-                                        }}
-                                      />
-                                      <FaRegTrashAlt
-                                        className="delete"
-                                        size={18}
-                                        onClick={() => {
-                                          handleEdit("delete", item._id);
-                                        }}
-                                      />
-                                    </>
-                                  )}
+                                    <FaRegEdit
+                                      className="edit"
+                                      size={18}
+                                      onClick={() => {
+                                        {
+                                          setVisible(true);
+                                          setUpdate(true);
+                                          setAdmin(true);
+
+                                          update
+                                            ? console.log("nalla")
+                                            : handleEdit("edit", item._id),
+                                            setId(item._id);
+                                        }
+                                      }}
+                                    />
+                                    <FaRegTrashAlt
+                                      className="delete"
+                                      size={18}
+                                      onClick={() => {
+                                        handleEdit("delete", item._id);
+                                      }}
+                                    />
+                                  </>
+                                  ) 
+                                  }
                                 </div>
                               ) : (
                                 <></>
                               )}
                               {activeTab === "Orders" && (
-                                <select>
-                                  <option value="">Select Status</option>
-                                  <option value="ordered">Ordered</option>
-                                  <option value="contact">Contact</option>
-                                  <option value="approved">Approved</option>
-                                  <option value="not">Not Approved</option>
-                                  <option value="payment">
-                                    Payment collected
-                                  </option>
-                                  <option value="done">Completed</option>
-                                </select>
-                              )}
+                                <select 
+                                onChange={(e) => {handleStatus(item._id, e.target.value)}}
+                                defaultValue={item.status || 'status'}
+                                >
+                                <option value="ordered">Ordered</option>
+                                <option value="contact">Contact</option>
+                                <option value="approved">Approved</option>
+                                <option value="notApproved">Not Approved</option>
+                                <option value="paymentCollected">Payment collected</option>
+                                <option value="completed">Completed</option>
+                              </select>)
+                              }
                             </tr>
                           </>
                         ))}

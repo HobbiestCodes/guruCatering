@@ -4,3 +4,15 @@
   box-sizing: border-box;
   font-family: 'DM Sans', sans-serif;
 }
+html, body {
+  overflow: hidden;
+}
+
+.scrollBar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

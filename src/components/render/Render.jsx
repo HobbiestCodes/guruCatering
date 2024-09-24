@@ -100,7 +100,7 @@ function Render() {
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Canvas>
-        <ScrollControls pages={2} damping={1}>
+        <ScrollControls pages={2} damping={1} style={{scrollbarWidth: 'none'}}>
           <CameraAnimation />
           <Simple />
           <Scroll html>
@@ -108,132 +108,111 @@ function Render() {
               <Home />
             </div>
 
-            <div
-              style={{ width: "100vw", height: "100vh", position: "relative" }}
-            >
-              <Modal
-                status={status}
-                isOpen={isModalOpen}
-                itemsToShow={itemsToShow}
-                onClose={handleClose}
-                isOrderPlaced={isOrderPlaced}
-                setIsOrderPlaced={setIsOrderPlaced}
-                triggerFormSubmit={triggerFormSubmit}
-                items={itemsToShow}
-                setItemsToShow={setItemsToShow}
-              >
-                <AnimatePresence>
-                  {isOrderPlaced ? (
-                    <motion.form
-                      id="form"
-                      ref={formRef}
-                      onSubmit={handleSubmit}
-                      initial={{ x: -500, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 1.2, type: "spring" }}
-                    >
-                      {status.message && (
-                        <div className="container">
-                          <label
-                            htmlFor="error"
-                            style={{
-                              color: status.status === 200 ? "green" : "red",
-                            }}
-                          >
-                            {status.message}
-                          </label>
-                        </div>
-                      )}
+            <div style={{ width: "100vw", position: "relative" }}>
+              {/* <AnimatePresence>
+                {isOrderPlaced ? (
+                  <motion.form
+                    id="form"
+                    ref={formRef}
+                    onSubmit={handleSubmit}
+                    initial={{ x: -500, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 1.2, type: "spring" }}
+                  >
+                    {status.message && (
                       <div className="container">
-                        <label htmlFor="phone-number">Phone Number:</label>
-                        <input
-                          type="text"
-                          value={phoneNumber}
-                          onChange={(e) =>
-                            setPhoneNumber(
-                              e.target.value.replace(/[^\d]/g, "").slice(0, 10)
-                            )
-                          }
-                          className="inputField"
-                          name="phone-number"
-                        />
+                        <label
+                          htmlFor="error"
+                          style={{
+                            color: status.status === 200 ? "green" : "red",
+                          }}
+                        >
+                          {status.message}
+                        </label>
                       </div>
-                      <div className="container">
-                        <label htmlFor="address">Address:</label>
-                        <input
-                          value={address}
-                          onChange={(e) => setAddress(e.target.value)}
-                          type="text"
-                          className="inputField"
-                          name="address"
-                        />
-                      </div>
-                      <div className="container">
-                        <label htmlFor="date">Date:</label>
-                        <input
-                          type="date"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                          className="inputField"
-                        />
-                      </div>
-                    </motion.form>
-                  ) : (
-                    <motion.div
-                      id="modalItems"
-                      className="modal-items"
-                      initial={{ x: 500, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      exit={{ x: 500, opacity: 0 }}
-                      transition={{ duration: 1.2, type: "spring" }}
-                    >
-                      {itemsToShow.length > 0 &&
-                        itemsToShow.map((item) => (
-                          <Cards
-                            item={item}
-                            key={item.id}
-                            setItemsToShow={setItemsToShow}
-                          />
-                        ))}
-                    </motion.div>
-                  )}
-                  {itemsToShow.length > 0 && (
-                    <div className="top-of-modal down">
-                      <h3 className="clear" onClick={handleClear}>
-                        Clear
-                      </h3>
-                      <button
-                        type="submit"
-                        className={`proceed ${
-                          itemsToShow.length > 4 ? "" : "notAllowed"
-                        }`}
-                        style={{
-                          backgroundColor:
-                            isOrderPlaced && itemsToShow.length > 4
-                              ? "#54d661"
-                              : "",
-                        }}
-                        onClick={(e) => {
-                          setIsOrderPlaced(true);
-                          address &&
-                            phoneNumber &&
-                            date &&
-                            triggerFormSubmit(e);
-                        }}
-                      >
-                        Place Order <IoIosArrowRoundForward size={30} />
-                        <div className="tolTip">Minimum order is 5</div>
-                      </button>
+                    )}
+                    <div className="container">
+                      <label htmlFor="phone-number">Phone Number:</label>
+                      <input
+                        type="text"
+                        value={phoneNumber}
+                        onChange={(e) =>
+                          setPhoneNumber(
+                            e.target.value.replace(/[^\d]/g, "").slice(0, 10)
+                          )
+                        }
+                        className="inputField"
+                        name="phone-number"
+                      />
                     </div>
-                  )}
-                </AnimatePresence>
-              </Modal>
-              <Selection
-                setIsModalOpen={setIsModalOpen}
-                foodItems={foodItems}
-                setItemsToShow={setItemsToShow}
-                itemsToShow={itemsToShow}
-              />
+                    <div className="container">
+                      <label htmlFor="address">Address:</label>
+                      <input
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        type="text"
+                        className="inputField"
+                        name="address"
+                      />
+                    </div>
+                    <div className="container">
+                      <label htmlFor="date">Date:</label>
+                      <input
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="inputField"
+                      />
+                    </div>
+                  </motion.form>
+                ) : (
+                  <motion.div
+                    id="modalItems"
+                    className="modal-items"
+                    initial={{ x: 500, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: 500, opacity: 0 }}
+                    transition={{ duration: 1.2, type: "spring" }}
+                  >
+                    {itemsToShow.length > 0 &&
+                      itemsToShow.map((item) => (
+                        <Cards
+                          item={item}
+                          key={item.id}
+                          setItemsToShow={setItemsToShow}
+                        />
+                      ))}
+                  </motion.div>
+                )}
+                {itemsToShow.length > 0 && (
+                  <div className="top-of-modal down">
+                    <h3 className="clear" onClick={handleClear}>
+                      Clear
+                    </h3>
+                    <button
+                      type="submit"
+                      className={`proceed ${
+                        itemsToShow.length > 4 ? "" : "notAllowed"
+                      }`}
+                      style={{
+                        backgroundColor:
+                          isOrderPlaced && itemsToShow.length > 4
+                            ? "#54d661"
+                            : "",
+                      }}
+                      onClick={(e) => {
+                        setIsOrderPlaced(true);
+                        address && phoneNumber && date && triggerFormSubmit(e);
+                      }}
+                    >
+                      Place Order <IoIosArrowRoundForward size={30} />
+                      <div className="tolTip">Minimum order is 5</div>
+                    </button>
+                  </div>
+                )}
+              </AnimatePresence> */}
+              {/* </Modal> */}
+              <Selection />
             </div>
           </Scroll>
         </ScrollControls>
